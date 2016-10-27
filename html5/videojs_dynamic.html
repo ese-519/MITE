@@ -18,27 +18,26 @@
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="http://vjs.zencdn.net/5.4.4/video.js"></script>
 <script>
+var myPlayer = videojs('vid1');
 
-    (function ($) {
-        $(document).ready(function () {
+myPlayer.ready(function () {
+	myPlayer.src({type: 'video/mp4', src: 'mov_bbb.mp4'});
+	myPlayer.play();
+});
 
-            // An example of playing with the Video.js javascript API
-            // Will start the video and then switch the source 3 seconds latter
-            // You can look at the doc there: http://docs.videojs.com/docs/guides/api.html
-            videojs('vid1').ready(function () {	// Wait until player is ready
-                var myPlayer = this;
-                myPlayer.src({type: 'video/mp4', src: 'mov_bbb.mp4'});
-				myPlayer.play();
-
-                $("#change").on('click', function () {
-                    myPlayer.src({type: 'video/mp4', src: 'small.mp4'});
-					myPlayer.play();
-                });
-            });
-
-        });
-    })(jQuery);
+function changeSource() {
+		document.querySelector('.content .value').innerHTML = "functioncall2";
+		myPlayer.requestFullscreen();
+		myPlayer.src({type: 'video/mp4', src: 'small.mp4'});
+		myPlayer.play();
+	}
+	
+$("#change").on('click', function () {
+	document.querySelector('.content .value').innerHTML = "functioncall";
+	changeSource(); 
+});	
+	
 </script> 
-<div class="content">Hello <span class="value"></span></div>
+<div class="content"><span class="value"></span></div>
 </body>
-</html><!-- a change -->
+</html>
