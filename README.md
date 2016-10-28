@@ -15,7 +15,7 @@ PROJECT MITE (Media Interactive Toy Experience)
 ### IMAGES and GIFs
 Add images and screenshot of your product, user iterface, etc. Animated GIFs of User interfaces would be preferred.
 
-![](images/animated.gif)
+![](images/Thumb.jpg)
 
 ### BUILD INSTRUCTIONS
 TODO: Steps to follow for anyone to use this code
