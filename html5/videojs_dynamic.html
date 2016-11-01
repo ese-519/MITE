@@ -19,22 +19,31 @@
 <script src="http://vjs.zencdn.net/5.4.4/video.js"></script>
 <script>
 var myPlayer = videojs('vid1');
+var doNext = true;
+
+myPlayer.on('timeupdate', function() {
+	document.querySelector('.content .value').innerHTML = myPlayer.currentTime();
+	if ((myPlayer.currentTime() >= 2) & doNext) {
+		doNext = false;
+	//	document.querySelector('.content .value').innerHTML = myPlayer.currentTime;
+		changeSource({type: 'video/mp4', src: 'small.mp4'}); 
+	}
+});
 
 myPlayer.ready(function () {
 	myPlayer.src({type: 'video/mp4', src: 'mov_bbb.mp4'});
 	myPlayer.play();
 });
 
-function changeSource() {
+function changeSource(sources) {
 		document.querySelector('.content .value').innerHTML = "functioncall2";
-		myPlayer.requestFullscreen();
-		myPlayer.src({type: 'video/mp4', src: 'small.mp4'});
+		myPlayer.src(sources);
 		myPlayer.play();
 	}
 	
 $("#change").on('click', function () {
 	document.querySelector('.content .value').innerHTML = "functioncall";
-	changeSource(); 
+	changeSource({type: 'video/mp4', src: 'small.mp4'}); 
 });	
 	
 </script> 
