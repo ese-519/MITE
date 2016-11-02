@@ -1,0 +1,52 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="http://vjs.zencdn.net/5.4.4/video-js.css"/>
+</head>
+<body>
+
+<button id="ledOn">LED On</button>
+<button id="ledOff">LED Off</button>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<script>
+var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/led";
+$("#ledOn").on('click', function () {
+	document.querySelector('.content .value').innerHTML = "LED on clicked";
+	$.ajax({
+        		type: "POST",
+        		url: POSTurl,
+        		data: {
+          		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
+          		args: "on",
+				},
+				success: function(data) {
+					console.log(data.return_value);
+					document.querySelector('.content .value').innerHTML = data.return_value;
+				}
+        		,
+	  		});
+	
+});	
+
+$("#ledOff").on('click', function () {
+	document.querySelector('.content .value').innerHTML = "LED off clicked";
+	$.ajax({
+        		type: "POST",
+        		url: POSTurl,
+        		data: {
+          		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
+          		args: "off"
+        		},
+				success: function(data) {
+					console.log(data.return_value);
+					document.querySelector('.content .value').innerHTML = data.return_value;
+				}
+	  		});
+});	
+	
+</script> 
+<div class="content"><span class="value"></span></div>
+</body>
+</html>

@@ -20,12 +20,13 @@
 <script>
 var myPlayer = videojs('vid1');
 var doNext = true;
+var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/led";
 
 myPlayer.on('timeupdate', function() {
 	document.querySelector('.content .value').innerHTML = myPlayer.currentTime();
 	if ((myPlayer.currentTime() >= 2) & doNext) {
 		doNext = false;
-	//	document.querySelector('.content .value').innerHTML = myPlayer.currentTime;
+		controlLED("on");
 		changeSource({type: 'video/mp4', src: 'small.mp4'}); 
 	}
 });
@@ -34,6 +35,17 @@ myPlayer.ready(function () {
 	myPlayer.src({type: 'video/mp4', src: 'mov_bbb.mp4'});
 	myPlayer.play();
 });
+
+function controlLED(cmd) {
+	$.ajax({
+        		type: "POST",
+        		url: POSTurl,
+        		data: {
+          		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
+          		args: cmd
+        		},
+	  		});
+}
 
 function changeSource(sources) {
 		document.querySelector('.content .value').innerHTML = "functioncall2";
