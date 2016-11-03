@@ -12,20 +12,23 @@
 
 <script>
 var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/led";
+var nichURL = "http://158.130.161.68:8081/on";
 $("#ledOn").on('click', function () {
 	document.querySelector('.content .value').innerHTML = "LED on clicked";
 	$.ajax({
-        		type: "POST",
-        		url: POSTurl,
-        		data: {
-          		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
-          		args: "on",
-				},
+        		type: "GET",
+        		url: nichURL,
+        		//data: {
+          		//access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
+          		//args: "on",
+				//},
+				//success: function(data) {
+					//console.log(data.return_value);
+					//document.querySelector('.content .value').innerHTML = data.return_value;
+				//}
 				success: function(data) {
-					console.log(data.return_value);
-					document.querySelector('.content .value').innerHTML = data.return_value;
+					document.querySelector('.content .value').innerHTML = data;
 				}
-        		,
 	  		});
 	
 });	

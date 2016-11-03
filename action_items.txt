@@ -1,0 +1,11 @@
+TODO
+
+1. Get 3 source videos
+2. Add POST to API
+3. Hardware:
+	a. Button, 2 LEDs on Photon
+4. Define API structure in a file
+5. Get HTML player to read data from API
+6. Photon
+	a. Code to call functions by name
+	b. Functions to light LEDs, read button
