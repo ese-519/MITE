@@ -20,25 +20,56 @@ int connectToMyServer(String ip) {  //Function to connect to TCP Server
     return -1; // failed to connect
   }
 }
+//----------------Function stubs
+void LedOn(){
+  digitalWrite(D7, HIGH);
+}
+
+void LedOff(){
+  digitalWrite(D7, LOW);
+}
+
+int time_flag = 0;
+void time_flag_set(){
+  time_flag = 1;
+}
+int ButtonCheck(){
+  //check for a button press in within the next two seconds
+  time_flag = 0;
+  Timer timer(2000, time_flag_set, 1);
+  while(1){
+    if (time_flag == 1) {
+      return 0;
+    }
+    if (digitalRead(D0) == HIGH){
+      return 1;
+    }
+  }
+}
+//----------------End function stubs
+
 
 void setup() {
   Particle.function("connect", connectToMyServer);
-
-  for (int pin = D0; pin <= D7; ++pin) {    //Set D0 to D7 as output pins
-    pinMode(pin, OUTPUT);
-  }
+  pinMode(D7, OUTPUT); //LED
+  pinMode(D0, INPUT_PULLDOWN); //Button
 }
 
 void loop() {
   if (client.connected()) {
     if (client.available()) {               //Send commands like 6h or 5l to turn on pin D6 and turn off pin D5
-      char pin = client.read() - '0' + D0;
-      char level = client.read();
-      if ('h' == level) {
-        digitalWrite(pin, HIGH);
-        client.write('m');
-      } else {
-        digitalWrite(pin, LOW);
+      //char pin = client.read() - '0' + D0;
+      char cmd = client.read();
+      if ('a' == cmd) {
+        LedOn();
+      } else if ('b' == cmd){
+        LedOff();
+      } else if('c' == cmd){
+        if (ButtonCheck()){
+          client.write('y');
+        } else {
+          client.write('n');
+        }
       }
     }
   }
