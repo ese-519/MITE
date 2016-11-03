@@ -7,48 +7,80 @@
 
 <button id="ledOn">LED On</button>
 <button id="ledOff">LED Off</button>
+<button id="checkButton">Button POST</button>
+<button id="readButton">Button GET</button>
 
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
 <script>
-var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/led";
+var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";
 var nichURL = "http://158.130.161.68:8081/on";
+var buttonCheckURL = "http://10.0.0./";
+var buttonReadURL = "http://10.0.0./";
 $("#ledOn").on('click', function () {
-	document.querySelector('.content .value').innerHTML = "LED on clicked";
 	$.ajax({
-        		type: "GET",
-        		url: nichURL,
-        		//data: {
-          		//access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
-          		//args: "on",
-				//},
-				//success: function(data) {
-					//console.log(data.return_value);
-					//document.querySelector('.content .value').innerHTML = data.return_value;
-				//}
+        		type: "POST",
+        		url: POSTurl + "led",
+        		data: {
+          		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
+          		args: "on",
+				},
 				success: function(data) {
-					document.querySelector('.content .value').innerHTML = data;
+					console.log(data);
 				}
 	  		});
 	
 });	
 
 $("#ledOff").on('click', function () {
-	document.querySelector('.content .value').innerHTML = "LED off clicked";
 	$.ajax({
         		type: "POST",
-        		url: POSTurl,
+        		url: POSTurl + "led",
         		data: {
           		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
           		args: "off"
         		},
 				success: function(data) {
-					console.log(data.return_value);
-					document.querySelector('.content .value').innerHTML = data.return_value;
+					console.log(data);
 				}
 	  		});
 });	
 	
+$("#checkButton").on('click', function () {
+	$.ajax({
+        		type: "POST",
+        		url: POSTurl + "button",
+        		data: {
+          		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
+          		args: "off"
+        		},
+				timeout: 7000,
+				success: function(data) {
+					console.log(data);
+				},
+				error: function() {
+					console.log("Button check timed out");
+				}
+	  		});
+});	
+
+$("#readButton").on('click', function () {
+	$.ajax({
+        		type: "POST",
+        		url: buttonReadURL,
+        		//data: {
+          		//access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
+          		//args: "off"
+        		//},
+				timeout: 7000,
+				success: function(data) {
+					console.log(data);
+				},
+				error: function() {
+					console.log("Button read timed out");
+				}
+	  		});
+});	
 </script> 
 <div class="content"><span class="value"></span></div>
 </body>
