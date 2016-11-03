@@ -1,15 +1,16 @@
 <!DOCTYPE html> 
 <html>
 <head>
-    <link type="text/css" rel="stylesheet" href="http://vjs.zencdn.net/5.4.4/video-js.css"/>
+    <!--<link type="text/css" rel="stylesheet" href="http://vjs.zencdn.net/5.4.4/video-js.css"/>-->
+	<link type="text/css" rel="stylesheet" href="video-js.css"/>
 </head>
 <body>
 <video
-    id="vid1"
+    id="vidjs"
     class="video-js vjs-default-skin"
     controls
     width="640" height="264"
-    data-setup='{"sources": [{ "type": "video/mp4", "src": "mov_bbb.mp4"}] }'
+    data-setup='{"sources": [{ "type": "video/mp4", "src": "vids/root.mp4"}] }'
     >
 </video>
 
@@ -18,47 +19,85 @@
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="http://vjs.zencdn.net/5.4.4/video.js"></script>
 <script>
-var myPlayer = videojs('vid1');
+var myPlayer = videojs('vidjs');
 var doNext = true;
 var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/led";
 var nichURL = "http://158.130.161.68:8081/on";
+var treeLevel = 0;
+var firstInput = 1;
+
 myPlayer.on('timeupdate', function() {
-	document.querySelector('.content .value').innerHTML = myPlayer.currentTime();
+	//document.querySelector('.content .value').innerHTML = myPlayer.currentTime();
 	if ((myPlayer.currentTime() >= 2) & doNext) {
 		doNext = false;
-		controlLED("on");
-		changeSource({type: 'video/mp4', src: 'small.mp4'}); 
+		//controlLED("on");
+	}
+});
+
+myPlayer.on('ended', function() {
+	console.log("ended event fired");
+	if (treeLevel == 0) {
+		console.log("Root video ended");
+		treeLevel += 1;
+		myPlayer.poster("vids/x.png");
+		myPlayer.posterImage.show();
+		myPlayer.trigger('loadstart');
+		document.querySelector('.content ,value').innerHTML = "HELP GOKU POWER UP!!!"
+		// Ask REST to watch for an input
+		// Delay and wait for response
+		setTimeout(function() {
+			if (firstInput == 0) {
+				console.log("Shake received");
+				document.querySelector('.content ,value').innerHTML = "GOOD JOB!!!"
+				changeSource({type: 'video/mp4', src: 'vids/a.mp4'}); 
+			}
+			else {
+				console.log("Shake not received");
+				document.querySelector('.content ,value').innerHTML = "Y'ALL MESSED UP"
+				changeSource({type: 'video/mp4', src: 'vids/b.mp4'}); 
+			}
+		}, 2000);
+		
+	
 	}
 });
 
 myPlayer.ready(function () {
-	myPlayer.src({type: 'video/mp4', src: 'mov_bbb.mp4'});
-	myPlayer.play();
+	myPlayer.src({type: 'video/mp4', src: 'vids/root.mp4'});
+	myPlayer.poster("vids/x.png");
+	//myPlayer.play();
+	
 });
 
 function controlLED(cmd) {
 	$.ajax({
-        		type: "GET",
-        		url: nichURL,
+        		type: "POST",
+        		url: POSTurl,
         		data: {
           		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
           		args: cmd
         		},
+				success: function(data) {
+					console.log(data);	
+				}
 	  		});
 }
 function remoteCMD(cmd) {
-	
+	$.ajax({
+        		type: "GET",
+        		url: nichURL,
+	  		});
 
 }
 function changeSource(sources) {
-		document.querySelector('.content .value').innerHTML = "functioncall2";
+		//document.querySelector('.content .value').innerHTML = "functioncall2";
 		myPlayer.src(sources);
 		myPlayer.play();
 	}
 	
 $("#change").on('click', function () {
-	document.querySelector('.content .value').innerHTML = "functioncall";
-	changeSource({type: 'video/mp4', src: 'small.mp4'}); 
+	//document.querySelector('.content .value').innerHTML = "functioncall";
+	changeSource({type: 'video/mp4', src: 'vids/b.mp4'}); 
 });	
 	
 </script> 
