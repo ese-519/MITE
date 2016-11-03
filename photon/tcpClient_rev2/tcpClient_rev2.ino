@@ -37,6 +37,7 @@ int ButtonCheck(){
   //check for a button press in within the next two seconds
   time_flag = 0;
   Timer timer(2000, time_flag_set, 1);
+  timer.start();
   while(1){
     if (time_flag == 1) {
       return 0;
@@ -57,7 +58,7 @@ void setup() {
 
 void loop() {
   if (client.connected()) {
-    if (client.available()) {               //Send commands like 6h or 5l to turn on pin D6 and turn off pin D5
+    if (client.available()) {
       //char pin = client.read() - '0' + D0;
       char cmd = client.read();
       if ('a' == cmd) {
@@ -65,11 +66,8 @@ void loop() {
       } else if ('b' == cmd){
         LedOff();
       } else if('c' == cmd){
-        if (ButtonCheck()){
-          client.write('y');
-        } else {
-          client.write('n');
-        }
+        int k=ButtonCheck();
+        client.write(k);
       }
     }
   }

@@ -26,9 +26,15 @@ console.log("replacing <DEVICE_ID> and <ACCESS_TOKEN>.");
 console.log("curl https://api.particle.io/v1/devices/<DEVICE_ID>/connect -d access_token=<ACCESS_TOKEN> -d ip=" + ip);
 
 var conns = [];
+var incoming = "";
+
 var server1 = net.createServer(function(socket){ //stupid anon functions.
   console.log("Someone connected from " + socket.remoteAddress + ":" + socket.remotePort + " to my TCP client!");
   conns.push(socket);
+  socket.on("data", function (data){
+    incoming = data[0];
+    data = "";
+  });
 });
 server1.listen(PORT);
 
@@ -52,14 +58,19 @@ app.post('/button', function (req, res) {
       //console.log(req);
       sock = conns[0];
       sock.write('c');
+      incoming = "";
       res.writeHead(200, {"Content-Type": "text/html"});
       res.end( "Button is being checked \n" );
 });
 
-app.get('/buttonAns', function(req, res){
+app.get('/button', function(req, res){
     sock = conns[0];
     res.writeHead(200, {"Content-Type": "text/html"});
-    var ans = sock.read();
+    var ans = incoming;
+    incoming = "";
+    console.log(ans);
+    res.end(ans + "\n");
+    /*
     if (ans == 'y'){
       res.end( "Button pressed \n" );
     } else if(ans == 'n'){
@@ -67,6 +78,7 @@ app.get('/buttonAns', function(req, res){
     } else {
       res.end( "Button check not initiated \n" );
     }
+    */
 });
 
 var server = app.listen(8081, function () {
