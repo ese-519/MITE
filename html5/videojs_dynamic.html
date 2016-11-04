@@ -22,15 +22,15 @@
 <script src="http://vjs.zencdn.net/5.4.4/video.js"></script>
 <script>
 
-var actionB = document.getElementById('shake');
-var vid = videojs('vidjs');
-var doNext = true;
-var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";
-var nichURL = "http://158.130.161.68:8081/on";
-var treeLevel = 0;
-var firstInput = 0;
-var checkButtonFlag = true;
-var ledOffFlag = true;
+var actionB = document.getElementById('shake');			// Action button for testing shake input
+var vid = videojs('vidjs');								// Video player object
+var doNext = true;										// Flag to turn on LED once @ 2 seconds
+var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";	// particle.io API url
+var nichURL = "http://10.0.0.75:8081/";					// Nichin's IP
+var treeLevel = 0;										// Current level in the video tree
+var firstInput = 0;										// Result of first action prompt
+var checkButtonFlag = true;								// Flag to check the button once
+var ledOffFlag = true;									// Flag to turn the LED off once
 actionB.style.visibility = 'hidden';
 vid.on('timeupdate', function() {
 	//document.querySelector('.content .value').innerHTML = vid.currentTime();
@@ -64,9 +64,6 @@ vid.on('ended', function() {
 			document.querySelector('.content ,value').innerHTML = "YOU DONE GOOFED."
 			changeSource({type: 'video/mp4', src: 'vids/b.mp4'}); 
 		}
-		//vid.poster("vids/x.png");
-		//vid.posterImage.show();
-		//vid.trigger('loadstart');
 		//actionB.style.visibility = 'visible';
 		// Ask REST to watch for an input
 		// Delay and wait for response
@@ -90,14 +87,16 @@ vid.on('ended', function() {
 function checkButton() {
 	$.ajax({
         type: "POST",
-			url: POSTurl + "button",
-			data: {
-			access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
-			args: ""
-			},
+			url: nichURL + "button",
+			contentType: "text/plain",
 			success: function(data) {
-				console.log(data);	
-				firstInput = data.return_value;
+				console.log("Button response: " + data);	
+				if (data == 1) {
+					firstInput = 1;
+				}
+				else {
+					firstInput = 0;
+				}
 				console.log(firstInput);
 				document.querySelector('.content ,value').innerHTML = "";
 			}
@@ -107,7 +106,6 @@ function checkButton() {
 }
 vid.ready(function () {
 	vid.src({type: 'video/mp4', src: 'vids/root.mp4'});
-	//vid.poster("vids/x.png");
 	//vid.play();
 	
 });
@@ -115,32 +113,20 @@ vid.ready(function () {
 function controlLED(cmd) {
 	$.ajax({
         		type: "POST",
-        		url: POSTurl + "led",
-        		data: {
-          		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
-          		args: cmd
-        		},
+        		url: nichURL + "led" + cmd,
 				success: function(data) {
 					console.log(data);	
-					firstInput = data.return_value;
 				}
 	  		});
 	console.log("end of controlLED");
 }
-function remoteCMD(cmd) {
-	$.ajax({
-        		type: "GET",
-        		url: nichURL,
-	  		});
 
-}
 function changeSource(sources) {
 		vid.src(sources);
 		vid.play();
 	}
 	
 $("#shake").on('click', function () {
-	//changeSource({type: 'video/mp4', src: 'vids/b.mp4'}); 
 	firstInput = 1;
 });	
 	

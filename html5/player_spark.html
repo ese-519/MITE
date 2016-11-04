@@ -1,0 +1,151 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <!--<link type="text/css" rel="stylesheet" href="http://vjs.zencdn.net/5.4.4/video-js.css"/>-->
+	<link type="text/css" rel="stylesheet" href="video-js.css"/>
+</head>
+<body>
+<center>
+<br>
+<video
+    id="vidjs"
+    class="video-js vjs-default-skin"
+    controls
+    width="640" height="264"
+    data-setup='{"sources": [{ "type": "video/mp4", "src": "vids/root.mp4"}] }'
+    >
+</video>
+<br>
+<button id="shake" style="height:100px;width:300px;font-size:20px">Shake it like a Polaroid</button>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="http://vjs.zencdn.net/5.4.4/video.js"></script>
+<script>
+
+var actionB = document.getElementById('shake');
+var vid = videojs('vidjs');
+var doNext = true;
+var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";
+var nichURL = "http://158.130.161.68:8081/on";
+var treeLevel = 0;
+var firstInput = 0;
+var checkButtonFlag = true;
+var ledOffFlag = true;
+actionB.style.visibility = 'hidden';
+vid.on('timeupdate', function() {
+	//document.querySelector('.content .value').innerHTML = vid.currentTime();
+	if ((vid.currentTime() >= 2) & doNext) {
+		doNext = false;
+		controlLED("on");
+	}
+	if ((vid.currentTime() >= 3) & ledOffFlag) {
+		ledOffFlag = false;
+		controlLED("off");
+	}
+	if ((vid.currentTime() >= 3.1) & checkButtonFlag) {
+		checkButtonFlag = false;
+		document.querySelector('.content ,value').innerHTML = "HELP GOKU POWER UP!!!"
+		checkButton();
+	}
+});
+
+vid.on('ended', function() {
+	console.log("ended event fired");
+	if (treeLevel == 0) {
+		console.log("Root video ended");
+		treeLevel += 1;
+		if (firstInput == 1) {
+			console.log("Shake received");
+			document.querySelector('.content ,value').innerHTML = "GOOD JOB!!!"
+			changeSource({type: 'video/mp4', src: 'vids/a.mp4'}); 
+		}
+		else {
+			console.log("Shake not received");
+			document.querySelector('.content ,value').innerHTML = "YOU DONE GOOFED."
+			changeSource({type: 'video/mp4', src: 'vids/b.mp4'}); 
+		}
+		//vid.poster("vids/x.png");
+		//vid.posterImage.show();
+		//vid.trigger('loadstart');
+		//actionB.style.visibility = 'visible';
+		// Ask REST to watch for an input
+		// Delay and wait for response
+		/*setTimeout(function() {
+			if (firstInput == 1) {
+				console.log("Shake received");
+				document.querySelector('.content ,value').innerHTML = "GOOD JOB!!!"
+				changeSource({type: 'video/mp4', src: 'vids/a.mp4'}); 
+			}
+			else {
+				console.log("Shake not received");
+				document.querySelector('.content ,value').innerHTML = "YOU DONE GOOFED."
+				changeSource({type: 'video/mp4', src: 'vids/b.mp4'}); 
+			}
+			actionB.style.visibility = 'hidden';
+		}, 5000);*/
+		
+	
+	}
+});
+function checkButton() {
+	$.ajax({
+        type: "POST",
+			url: POSTurl + "button",
+			data: {
+			access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
+			args: ""
+			},
+			success: function(data) {
+				console.log(data);	
+				firstInput = data.return_value;
+				console.log(firstInput);
+				document.querySelector('.content ,value').innerHTML = "";
+			}
+		});
+	console.log("end of checkButton");
+
+}
+vid.ready(function () {
+	vid.src({type: 'video/mp4', src: 'vids/root.mp4'});
+	//vid.poster("vids/x.png");
+	//vid.play();
+	
+});
+
+function controlLED(cmd) {
+	$.ajax({
+        		type: "POST",
+        		url: POSTurl + "led",
+        		data: {
+          		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
+          		args: cmd
+        		},
+				success: function(data) {
+					console.log(data);	
+					firstInput = data.return_value;
+				}
+	  		});
+	console.log("end of controlLED");
+}
+function remoteCMD(cmd) {
+	$.ajax({
+        		type: "GET",
+        		url: nichURL,
+	  		});
+
+}
+function changeSource(sources) {
+		vid.src(sources);
+		vid.play();
+	}
+	
+$("#shake").on('click', function () {
+	//changeSource({type: 'video/mp4', src: 'vids/b.mp4'}); 
+	firstInput = 1;
+});	
+	
+</script> 
+<div class="content"><span class="value"></span></div>
+</center>
+</body>
+</html>
