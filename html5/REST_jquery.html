@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html> 	
 <html>
 <head>
     <link type="text/css" rel="stylesheet" href="http://vjs.zencdn.net/5.4.4/video-js.css"/>
@@ -14,13 +14,14 @@
 
 <script>
 var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";
-var nichURL = "http://158.130.161.68:8081/on";
-var buttonCheckURL = "http://10.0.0./";
-var buttonReadURL = "http://10.0.0./";
+var nichURL = "http://10.0.0.75:8081/";
+var buttonCheckURL = "http://10.0.0.75:8081/button";
+var buttonReadURL = "http://10.0.0.75:8081/button";
+
 $("#ledOn").on('click', function () {
 	$.ajax({
         		type: "POST",
-        		url: POSTurl + "led",
+        		url: nichURL + "ledon",
         		data: {
           		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
           		args: "on",
@@ -35,7 +36,7 @@ $("#ledOn").on('click', function () {
 $("#ledOff").on('click', function () {
 	$.ajax({
         		type: "POST",
-        		url: POSTurl + "led",
+        		url: nichURL + "ledoff",
         		data: {
           		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
           		args: "off"
@@ -49,11 +50,12 @@ $("#ledOff").on('click', function () {
 $("#checkButton").on('click', function () {
 	$.ajax({
         		type: "POST",
-        		url: POSTurl + "button",
+        		url: nichURL + "button",
         		data: {
           		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
           		args: "off"
         		},
+				contentType: "text/plain",
 				timeout: 7000,
 				success: function(data) {
 					console.log(data);
@@ -66,12 +68,12 @@ $("#checkButton").on('click', function () {
 
 $("#readButton").on('click', function () {
 	$.ajax({
-        		type: "POST",
-        		url: buttonReadURL,
-        		//data: {
-          		//access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
-          		//args: "off"
-        		//},
+        		type: "GET",
+        		url: nichURL + "button",
+        		data: {
+          		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
+          		args: "off"
+        		},
 				timeout: 7000,
 				success: function(data) {
 					console.log(data);
