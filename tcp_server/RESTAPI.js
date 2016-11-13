@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-//var bodyParser = require("body-parser");
+var bodyParser = require("body-parser");
 
 var os = require('os');
 var net = require('net');
@@ -34,8 +34,10 @@ var server1 = net.createServer(function(socket){ //stupid anon functions.
   conns.push(socket);
 });
 server1.listen(PORT);
-//app.use(bodyParser.urlencoded({ extended: false }));
-//app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+/*	Deprecated post code
 app.post('/ledon', function (req, res) {
       //console.log(req);
       sock = conns[0];
@@ -61,24 +63,36 @@ app.post('/button', function(req, res) {
 	sock.once('data', function(data) {
 		dataFlag = true;
 		if (dataFlag) {
-			console.log(data[0] + " from button");
 			res.end(data[0] + "\n");
 		}
 	});
-});
+});*/
 
-app.post('/button2', function(req, res) {
+app.post('/photon', function(req, res) {
 	var sock = conns[0];
-	sock.write('c');
-	res.writeHead(200, {"Content-Type": "text/plain; charset = utf-8"});
 	var dataFlag = false;
 	sock.once('data', function(data) {
 		dataFlag = true;
 		if (dataFlag) {
-			console.log(data[0] + " from button2");
 			res.end(data[0] + "\n");
 		}
 	});
+	console.log(req.body.func);
+	res.writeHead(200, {"Content-Type": "text/plain; charset = utf-8"});
+	switch (req.body.func) {
+		case "ledOn":
+			sock.write('a');
+			break;
+		case "ledOff":
+			sock.write('b');
+			break;
+		case "button":
+			sock.write('c');
+			break;
+		default:
+			res.end("Invalid function call");
+			break;
+	}	
 });
 
 var server = app.listen(8081, function () {

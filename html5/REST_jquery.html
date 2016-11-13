@@ -21,28 +21,33 @@ var buttonReadURL = "http://10.0.0.75:8081/button";
 $("#ledOn").on('click', function () {
 	$.ajax({
         		type: "POST",
-        		url: nichURL + "ledon",
+        		url: nichURL + "photon",
         		data: {
-          		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
-          		args: "on",
-				},
+          		func: "ledOn",
+        		},
+				timeout: 7000,
 				success: function(data) {
 					console.log(data);
+				},
+				error: function() {
+					console.log("Button read timed out");
 				}
 	  		});
-	
 });	
 
 $("#ledOff").on('click', function () {
 	$.ajax({
         		type: "POST",
-        		url: nichURL + "ledoff",
+        		url: nichURL + "photon",
         		data: {
-          		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
-          		args: "off"
+          		func: "ledOff",
         		},
+				timeout: 7000,
 				success: function(data) {
 					console.log(data);
+				},
+				error: function() {
+					console.log("Button read timed out");
 				}
 	  		});
 });	
@@ -50,18 +55,16 @@ $("#ledOff").on('click', function () {
 $("#checkButton").on('click', function () {
 	$.ajax({
         		type: "POST",
-        		url: nichURL + "button",
+        		url: nichURL + "photon",
         		data: {
-          		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
-          		args: "off"
+          		func: "button",
         		},
-				contentType: "text/plain",
 				timeout: 7000,
 				success: function(data) {
 					console.log(data);
 				},
 				error: function() {
-					console.log("Button check timed out");
+					console.log("Button read timed out");
 				}
 	  		});
 });	
@@ -69,10 +72,9 @@ $("#checkButton").on('click', function () {
 $("#readButton").on('click', function () {
 	$.ajax({
         		type: "POST",
-        		url: nichURL + "button2",
+        		url: nichURL + "photon",
         		data: {
-          		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
-          		args: "off"
+          		func: "ledOn",
         		},
 				timeout: 7000,
 				success: function(data) {

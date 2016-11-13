@@ -36,11 +36,11 @@ vid.on('timeupdate', function() {
 	//document.querySelector('.content .value').innerHTML = vid.currentTime();
 	if ((vid.currentTime() >= 2) & doNext) {
 		doNext = false;
-		controlLED("on");
+		controlLED("ledOn");
 	}
 	if ((vid.currentTime() >= 3) & ledOffFlag) {
 		ledOffFlag = false;
-		controlLED("off");
+		controlLED("ledOff");
 	}
 	if ((vid.currentTime() >= 3.1) & checkButtonFlag) {
 		checkButtonFlag = false;
@@ -87,8 +87,12 @@ vid.on('ended', function() {
 function checkButton() {
 	$.ajax({
         type: "POST",
-			url: nichURL + "button",
-			contentType: "text/plain",
+			url: nichURL + "photon",
+			//contentType: "text/plain",
+			data: {
+				func: "button",
+			},
+			timeout: 7000,
 			success: function(data) {
 				console.log("Button response: " + data);	
 				if (data == 1) {
@@ -99,10 +103,13 @@ function checkButton() {
 				}
 				console.log(firstInput);
 				document.querySelector('.content ,value').innerHTML = "";
+			},
+			error: function() {
+				console.log("checkButton timed out");
+				return false;
 			}
 		});
-	console.log("end of checkButton");
-
+	//console.log("end of checkButton");
 }
 vid.ready(function () {
 	vid.src({type: 'video/mp4', src: 'vids/root.mp4'});
@@ -112,13 +119,20 @@ vid.ready(function () {
 
 function controlLED(cmd) {
 	$.ajax({
-        		type: "POST",
-        		url: nichURL + "led" + cmd,
-				success: function(data) {
-					console.log(data);	
-				}
-	  		});
-	console.log("end of controlLED");
+        type: "POST",
+		url: nichURL + "photon",
+		data: {
+			func: cmd
+		},
+		timeout: 7000,
+		success: function(data) {
+			console.log(data);	
+		},
+		error: function() {
+			console.log("controlLED timed out");
+			return false;
+		}
+	});
 }
 
 function changeSource(sources) {
