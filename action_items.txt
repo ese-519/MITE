@@ -1,6 +1,5 @@
 TODO
 
-1. Get 3 source videos
 2. Add POST to API
 3. Hardware:
 	a. Button, 2 LEDs on Photon

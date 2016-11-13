@@ -14,7 +14,7 @@
 
 <script>
 var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";
-var nichURL = "http://10.0.0.75:8081/";
+var nichURL = "http://192.168.0.101:8081/";
 var buttonCheckURL = "http://10.0.0.75:8081/button";
 var buttonReadURL = "http://10.0.0.75:8081/button";
 
@@ -68,8 +68,8 @@ $("#checkButton").on('click', function () {
 
 $("#readButton").on('click', function () {
 	$.ajax({
-        		type: "GET",
-        		url: nichURL + "button",
+        		type: "POST",
+        		url: nichURL + "button2",
         		data: {
           		access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
           		args: "off"
