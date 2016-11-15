@@ -104,7 +104,7 @@ void loop(void)
   Serial.print(F("ACCEL "));
   Serial.print("X: "); Serial.print(event.acceleration.x); Serial.print("  ");
   Serial.print("Y: "); Serial.print(event.acceleration.y); Serial.print("  ");
-  Serial.print("Z: "); Serial.print(event.acceleration.z); Serial.print("  ");Serial.println("m/s^2 ");
+  Serial.print("Z: "); Serial.print(event.acceleration.z); Serial.print("  "); Serial.println("m/s^2 ");
 
   /* Display the results (magnetic vector values are in micro-Tesla (uT)) */
   /*mag.getEvent(&event);
@@ -118,7 +118,7 @@ void loop(void)
   Serial.print(F("GYRO  "));
   Serial.print("X: "); Serial.print(event.gyro.x); Serial.print("  ");
   Serial.print("Y: "); Serial.print(event.gyro.y); Serial.print("  ");
-  Serial.print("Z: "); Serial.print(event.gyro.z); Serial.print("  ");Serial.println("rad/s ");
+  Serial.print("Z: "); Serial.print(event.gyro.z); Serial.print("  "); Serial.println("rad/s ");
 
 
   Serial.println(F(""));
