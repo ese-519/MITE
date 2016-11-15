@@ -1,6 +1,6 @@
 #include "Particle.h"
 
-#include "Adafruit_10DOF_IMU/Adafruit_10DOF_IMU.h"
+#include "Adafruit_10DOF_IMU.h"
 
 /* Assign a unique ID to the sensors */
 Adafruit_LSM303_Accel_Unified accel = Adafruit_LSM303_Accel_Unified(30301);

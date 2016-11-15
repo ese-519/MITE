@@ -9,7 +9,7 @@
   please support Adafruit andopen-source hardware by purchasing products
   from Adafruit!
 
-  Written by Kevin Townsend for Adafruit Industries.  
+  Written by Kevin Townsend for Adafruit Industries.
   BSD license, all text above must be included in any redistribution
  ***************************************************************************/
 #include "Particle.h"
@@ -18,7 +18,7 @@
 #include <limits.h>
 #include <math.h>
 
-#include "Adafruit_10DOF_IMU/Adafruit_10DOF.h"
+#include "Adafruit_10DOF.h"
 
 #define PI  (3.14159265F);
 
@@ -30,20 +30,20 @@
 /***************************************************************************
  CONSTRUCTOR
  ***************************************************************************/
- 
+
 /**************************************************************************/
 /*!
     @brief  Instantiates a new Adafruit_10DOF class
 */
 /**************************************************************************/
-Adafruit_10DOF::Adafruit_10DOF(void) 
+Adafruit_10DOF::Adafruit_10DOF(void)
 {
 }
 
 /***************************************************************************
  PUBLIC FUNCTIONS
  ***************************************************************************/
- 
+
 /**************************************************************************/
 /*!
     @brief  Setups the HW
@@ -68,7 +68,7 @@ bool Adafruit_10DOF::begin()
                           .pitch and .roll fields populated
     @return Returns true if the operation was successful, false if there
             was an error
-            
+
     @code
 
     bool error;
