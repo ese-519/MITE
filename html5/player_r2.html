@@ -1,0 +1,214 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <!--<link type="text/css" rel="stylesheet" href="http://vjs.zencdn.net/5.4.4/video-js.css"/>-->
+	<link type="text/css" rel="stylesheet" href="video-js.css"/>
+	<link href="videojs\videojs-overlay\dist\videojs-overlay.css" rel="stylesheet">
+	<style>
+		div.overlay {
+			font-size: 300%;
+		}
+	</style>
+</head>
+<body>
+<center>
+<br>
+<video
+	id="vidjs"
+	class="video-js vjs-default-skin"
+	controls
+	width="640" height="360"
+	data-setup='{"sources": [{ "type": "video/mp4", "src": "vids/testmovie.mp4", "fluid": true}] }'
+	>
+</video>
+<br>
+<button id="shake" style="height:100px;width:300px;font-size:20px">Shake it like a Polaroid</button>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<!--<script src="http://vjs.zencdn.net/5.4.4/video.js"></script>
+<script src="http://vjs.zencdn.net/5.4.4/video.js"></script>
+<script src ="C:\Windows\System32\node_modules\video.js\dist\video.js"></script>-->
+<script src="videojs\video.js\dist\video.js"></script>
+<script src="videojs\videojs-overlay\dist\videojs-overlay.js"></script>
+<script>
+
+var actionB = document.getElementById('shake');			// Action button for testing shake input
+var vid = videojs('vidjs');								// Video player object
+var doNext = true;										// Flag to turn on LED once @ 2 seconds
+var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";	// particle.io API url
+var nichURL = "http://192.168.0.101:8081/";					// Nichin's IP
+var treeLevel = 0;										// Current level in the video tree
+var firstInput = 0;										// Result of first action prompt
+var checkButtonFlag = true;								// Flag to check the button once
+var ledOffFlag = true;									// Flag to turn the LED off once
+var eventsMax = 4;										// Max events to execute per video
+
+// Video objects start here - declare in reverse order so parents can reference their children
+var VIDA = {
+	src: "vids/a.mp4",
+	type: "video/mp4",
+	end: true,
+	events: [[false, 2], [false, 3]],
+	check: [false, 0],
+	overlay: function() {
+		vid.overlay({
+			class: 'overlay',
+			showBackground: false,
+			overlays: [{
+				content: 'shake',
+				start: 'play',
+				end: 5,
+				align: 'top-left'
+			}]
+		});
+	}
+};
+
+var VIDB = {
+	src: "vids/b.mp4",
+	type: "video/mp4",
+	end: true,
+	events: [[false, 2], [false, 3]],
+	check: [false, 0],
+	overlay: function() {
+		vid.overlay({
+			class: 'overlay',
+			showBackground: false,
+			overlays: [{
+				content: 'noshake',
+				start: 'play',
+				end: 5,
+				align: 'top-left'
+			}]
+		});
+	}
+};
+
+var VIDROOT = {
+	src: "vids/testmovie.mp4",
+	type: "video/mp4",
+	events: [[true, 2, "controlLED", "ledOn"],[true, 3, "controlLED", "ledOff"]], // [execute?, timestamp, function name, function arg]
+	check: [true, 3.1, "checkButton", ""],
+	end: false,
+	childA: VIDA,
+	childB: VIDB
+};
+// Video objects end here
+
+var thisVid = VIDROOT;
+
+actionB.style.visibility = 'hidden';
+vid.on('timeupdate', function() {
+	for (i = 0; i < thisVid.events.length; i++) {		// Loop through available events 
+		if (thisVid.events[i][0] & (vid.currentTime() >= thisVid.events[i][1])) {	// Event not fired yet and time is correct
+			thisVid.events[i][0] = false;				// Clear event flag
+			window[thisVid.events[i][2]](thisVid.events[i][3]);			// Execute designated function(args)
+		}
+	}
+	if ((vid.currentTime() >= thisVid.check[1]) & thisVid.check[0]) {
+		thisVid.check[0] = false;
+		document.querySelector('.content ,value').innerHTML = "HELP GOKU POWER UP!!!"
+		window[thisVid.check[2]](thisVid.check[3]);
+	}
+});
+
+vid.on('ended', function() {
+	console.log("ended event fired");
+	if (!thisVid.end) {
+		if (firstInput == 1) {
+			console.log("Shake received");
+			document.querySelector('.content ,value').innerHTML = "GOOD JOB!!!"
+			thisVid = thisVid.childA;
+			changeSource({type: thisVid.type, src: thisVid.src});
+		}
+		else {
+			console.log("Shake not received");
+			document.querySelector('.content ,value').innerHTML = "YOU DONE GOOFED."
+			thisVid = thisVid.childB;
+			changeSource({type: thisVid.type, src: thisVid.src});
+			VIDROOT.childB.overlay();
+		}
+		//actionB.style.visibility = 'visible';
+	}
+	else {
+	console.log("end of tree");}
+});
+
+vid.overlay({
+	class: 'overlay',
+	showBackground: false,
+	overlays: [{
+		content: 'test',
+		start: 3,
+		end: 7,
+		align: 'top-left'
+	}]
+});
+
+function checkButton() {
+	$.ajax({
+        type: "POST",
+			url: nichURL + "photon",
+			//contentType: "text/plain",
+			data: {
+				func: "button",
+			},
+			timeout: 7000,
+			success: function(data) {
+				console.log("Button response: " + data);	
+				if (data == 1) {
+					firstInput = 1;
+				}
+				else {
+					firstInput = 0;
+				}
+				console.log(firstInput);
+				document.querySelector('.content ,value').innerHTML = "";
+			},
+			error: function() {
+				console.log("checkButton timed out");
+				return false;
+			}
+		});
+	//console.log("end of checkButton");
+}
+
+vid.ready(function () {
+	vid.src({type: thisVid.type, src: thisVid.src});
+	//vid.play();
+	
+});
+
+function controlLED(cmd) {
+	$.ajax({
+        type: "POST",
+		url: nichURL + "photon",
+		data: {
+			func: cmd
+		},
+		timeout: 7000,
+		success: function(data) {
+			console.log(data);	
+		},
+		error: function() {
+			console.log("controlLED timed out");
+			return false;
+		}
+	});
+}
+
+function changeSource(sources) {
+		vid.src(sources);
+		vid.play();
+	}
+	
+$("#shake").on('click', function () {
+	firstInput = 1;
+});	
+	
+</script> 
+<div class="content"><span class="value"></span></div>
+</div>
+</center>
+</body>
+</html>
