@@ -1,12 +1,11 @@
 <!DOCTYPE html> 
 <html>
 <head>
-    <!--<link type="text/css" rel="stylesheet" href="http://vjs.zencdn.net/5.4.4/video-js.css"/>-->
 	<link type="text/css" rel="stylesheet" href="video-js.css"/>
 	<link href="videojs\videojs-overlay\dist\videojs-overlay.css" rel="stylesheet">
 	<style>
 		div.overlay {
-			font-size: 300%;
+			font-size: 500%;
 		}
 	</style>
 </head>
@@ -22,26 +21,17 @@
 	>
 </video>
 <br>
-<button id="shake" style="height:100px;width:300px;font-size:20px">Shake it like a Polaroid</button>
+<button id="shake" style="height:20px;width:150px;font-size:10px">Connect to photon</button>
 
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<!--<script src="http://vjs.zencdn.net/5.4.4/video.js"></script>
-<script src="http://vjs.zencdn.net/5.4.4/video.js"></script>
-<script src ="C:\Windows\System32\node_modules\video.js\dist\video.js"></script>-->
 <script src="videojs\video.js\dist\video.js"></script>
 <script src="videojs\videojs-overlay\dist\videojs-overlay.js"></script>
 <script>
 
 var actionB = document.getElementById('shake');			// Action button for testing shake input
 var vid = videojs('vidjs');								// Video player object
-var doNext = true;										// Flag to turn on LED once @ 2 seconds
 var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";	// particle.io API url
-var nichURL = "http://192.168.0.101:8081/";					// Nichin's IP
-var treeLevel = 0;										// Current level in the video tree
-var firstInput = 0;										// Result of first action prompt
-var checkButtonFlag = true;								// Flag to check the button once
-var ledOffFlag = true;									// Flag to turn the LED off once
-var eventsMax = 4;										// Max events to execute per video
+var apiURL = "http://192.168.0.101:8081/";					// Nichin's IP
 
 // Video objects start here - declare in reverse order so parents can reference their children
 var VIDA = {
@@ -88,7 +78,7 @@ var VIDROOT = {
 	src: "vids/testmovie.mp4",
 	type: "video/mp4",
 	events: [[true, 2, "controlLED", "ledOn"],[true, 3, "controlLED", "ledOff"]], // [execute?, timestamp, function name, function arg]
-	check: [true, 3.1, "checkButton", ""],
+	check: [true, 5, "checkButton", "", 0, "Help!!!"],	// [execute?, timestamp, function name, arg, result, overlay text]
 	end: false,
 	childA: VIDA,
 	childB: VIDB
@@ -97,7 +87,7 @@ var VIDROOT = {
 
 var thisVid = VIDROOT;
 
-actionB.style.visibility = 'hidden';
+//actionB.style.visibility = 'hidden';
 vid.on('timeupdate', function() {
 	for (i = 0; i < thisVid.events.length; i++) {		// Loop through available events 
 		if (thisVid.events[i][0] & (vid.currentTime() >= thisVid.events[i][1])) {	// Event not fired yet and time is correct
@@ -113,23 +103,47 @@ vid.on('timeupdate', function() {
 });
 
 vid.on('ended', function() {
-	console.log("ended event fired");
-	if (!thisVid.end) {
-		if (firstInput == 1) {
-			console.log("Shake received");
+	//console.log("ended event fired");
+	if (!thisVid.end) {		// Not the last video in the tree
+		if (thisVid.check[4] == 1) {
+			console.log("Positive input received");
 			document.querySelector('.content ,value').innerHTML = "GOOD JOB!!!"
 			thisVid = thisVid.childA;
 			changeSource({type: thisVid.type, src: thisVid.src});
 		}
 		else {
-			console.log("Shake not received");
+			console.log("Negative/no input received");
 			document.querySelector('.content ,value').innerHTML = "YOU DONE GOOFED."
 			thisVid = thisVid.childB;
 			changeSource({type: thisVid.type, src: thisVid.src});
 			VIDROOT.childB.overlay();
 		}
 		//actionB.style.visibility = 'visible';
+		if (thisVid.check[0]) {
+			vid.overlay({
+				class: 'overlay',
+				showBackground: false,
+				overlays: [{
+					content: thisVid.check[5],
+					start: thisVid.check[1] - 1,
+					end: thisVid.check[1] + 5,
+					align: 'top-left'
+				}]
+			});
+		}
+		else {
+			vid.overlay({
+				class: 'overlay',
+				showBackground: false,
+				overlays: [{
+					content: "",
+					start: 'play',
+					end: 'stop'
+				}]
+			});
+		}
 	}
+	
 	else {
 	console.log("end of tree");}
 });
@@ -138,9 +152,9 @@ vid.overlay({
 	class: 'overlay',
 	showBackground: false,
 	overlays: [{
-		content: 'test',
-		start: 3,
-		end: 7,
+		content: thisVid.check[5],
+		start: thisVid.check[1] - 1,
+		end: thisVid.check[1] + 5,
 		align: 'top-left'
 	}]
 });
@@ -148,7 +162,7 @@ vid.overlay({
 function checkButton() {
 	$.ajax({
         type: "POST",
-			url: nichURL + "photon",
+			url: apiURL + "photon",
 			//contentType: "text/plain",
 			data: {
 				func: "button",
@@ -157,12 +171,11 @@ function checkButton() {
 			success: function(data) {
 				console.log("Button response: " + data);	
 				if (data == 1) {
-					firstInput = 1;
+					thisVid.check[4] = 1;
 				}
 				else {
-					firstInput = 0;
+					thisVid.check[4] = 0;
 				}
-				console.log(firstInput);
 				document.querySelector('.content ,value').innerHTML = "";
 			},
 			error: function() {
@@ -182,7 +195,7 @@ vid.ready(function () {
 function controlLED(cmd) {
 	$.ajax({
         type: "POST",
-		url: nichURL + "photon",
+		url: apiURL + "photon",
 		data: {
 			func: cmd
 		},
@@ -197,13 +210,34 @@ function controlLED(cmd) {
 	});
 }
 
+function connect(ipAddress) {
+	$.ajax({
+        type: "POST",
+		url: "https://api.particle.io/v1/devices/2a005e001551353531343431/connect",
+		data: {
+			access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
+			ip: ipAddress
+		},
+		timeout: 7000,
+		success: function(data) {
+			console.log("Connected to photon!");	
+			console.log(data);
+			actionB.style.visibility='hidden';
+		},
+		error: function() {
+			console.log("Could not connect to photon!");
+			return false;
+		}
+	});
+}
+
 function changeSource(sources) {
 		vid.src(sources);
 		vid.play();
 	}
 	
 $("#shake").on('click', function () {
-	firstInput = 1;
+	connect("192.168.0.101");
 });	
 	
 </script> 
