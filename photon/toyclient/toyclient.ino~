@@ -104,9 +104,11 @@ void loop() {
       } else if ('b' == cmd){
         client.write(LedOff());
       } else if('c' == cmd){
-        client.write(ButtonCheck());
+        int k=ButtonCheck();
+        client.write(k);
       } else if ('s' == cmd){
-        client.write(shakeDetect());
+        int k=shakeDetect();
+        client.write(k);
       }
     }
   }
