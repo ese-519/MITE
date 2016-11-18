@@ -5,14 +5,14 @@
 Adafruit_LSM303_Accel_Unified accel = Adafruit_LSM303_Accel_Unified(30301);
 Adafruit_L3GD20_Unified       gyro  = Adafruit_L3GD20_Unified(20);
 
-int shakeDetect(){
+int idleDetect(){
   sensors_event_t event;
   int i;
   int s = 1;
-  float val = 1.0;
+  float val = 0.08;
   for (i =0; i < 5; i++ ){
     gyro.getEvent(&event);
-    if (!(fabs(event.gyro.x) > val || fabs(event.gyro.y) >  val || fabs(event.gyro.z) > val)){
+    if (fabs(event.gyro.x) > val || fabs(event.gyro.y) >  val || fabs(event.gyro.z) > val){
       s = 0;
     }
     delay(100);
@@ -45,11 +45,11 @@ void setup(void)
 void loop(void)
 {
 
-  if (shakeDetect()){
-    Serial.println(" ***Shake that booty*** ");
+  if (idleDetect()){
+    Serial.println(" NO movements ");
   }
   else {
-    Serial.println(" Mama asleep ");
+    Serial.println(" YES movements ");
   }
 
 }

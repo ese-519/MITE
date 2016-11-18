@@ -68,7 +68,7 @@ int shakeDetect(){
   int i;
   int s = 1;
   float val = 1.0;
-  for (i =0; i < 5; i++ ){
+  for (i =0; i < 6; i++ ){
     gyro.getEvent(&event);
     if (!(fabs(event.gyro.x) > val || fabs(event.gyro.y) >  val || fabs(event.gyro.z) > val)){
       s = 0;
@@ -78,6 +78,20 @@ int shakeDetect(){
   return s;
 }
 
+int idleDetect(){
+  sensors_event_t event;
+  int i;
+  int s = 1;
+  float val = 0.08;
+  for (i =0; i < 6; i++ ){
+    gyro.getEvent(&event);
+    if (fabs(event.gyro.x) > val || fabs(event.gyro.y) >  val || fabs(event.gyro.z) > val){
+      s = 0;
+    }
+    delay(100);
+  }
+  return s;
+}
 //----------------End function stubs
 
 
@@ -105,8 +119,10 @@ void loop() {
         client.write(LedOff());
       } else if('c' == cmd){
         client.write(ButtonCheck());
-      } else if ('s' == cmd){
+      } else if ('d' == cmd){
         client.write(shakeDetect());
+      } else if ('e' == cmd){
+        client.write(idleDetect());
       }
     }
   }

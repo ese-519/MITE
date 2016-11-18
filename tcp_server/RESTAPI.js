@@ -56,7 +56,10 @@ app.post('/photon', function(req, res) {
 			sock.write('c');
 			break;
         case "shake":
-            sock.write('s');
+            sock.write('d');
+			break;
+        case "idle":
+            sock.write('e');
 			break;
 		default:
 			res.end("Invalid function call");
