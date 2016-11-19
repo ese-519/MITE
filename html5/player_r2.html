@@ -17,7 +17,7 @@
 	class="video-js vjs-default-skin"
 	controls
 	width="640" height="360"
-	data-setup='{"sources": [{ "type": "video/mp4", "src": "vids/testmovie.mp4", "fluid": true}] }'
+	data-setup='{"sources": [{ "type": "video/mp4", "src": "vids/Intro.mp4", "fluid": true}] }'
 	>
 </video>
 <br>
@@ -34,8 +34,8 @@ var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";	//
 var apiURL = "http://192.168.0.101:8081/";					// Nichin's IP
 
 // Video objects start here - declare in reverse order so parents can reference their children
-var VIDA = {
-	src: "vids/a.mp4",
+var VIDBB = {
+	src: "vids/Lose.mp4",
 	type: "video/mp4",
 	end: true,
 	events: [[false, 2], [false, 3]],
@@ -51,13 +51,135 @@ var VIDA = {
 				align: 'top-left'
 			}]
 		});
-	}
+	},
+};
+
+var VIDBA = {
+	src: "vids/Shielded.mp4",
+	type: "video/mp4",
+	end: true,
+	events: [[false, 2], [false, 3]],
+	check: [false, 0],
+	overlay: function() {
+		vid.overlay({
+			class: 'overlay',
+			showBackground: false,
+			overlays: [{
+				content: 'shake',
+				start: 'play',
+				end: 5,
+				align: 'top-left'
+			}]
+		});
+	},
+};
+var VIDAB = {
+	src: "vids/Lose.mp4",
+	type: "video/mp4",
+	end: true,
+	events: [[false, 2], [false, 3]],
+	check: [false, 0],
+	overlay: function() {
+		vid.overlay({
+			class: 'overlay',
+			showBackground: false,
+			overlays: [{
+				content: 'shake',
+				start: 'play',
+				end: 5,
+				align: 'top-left'
+			}]
+		});
+	},
+};
+
+var VIDAA = {
+	src: "vids/Win.mp4",
+	type: "video/mp4",
+	end: true,
+	events: [[false, 2], [false, 3]],
+	check: [false, 0],
+	overlay: function() {
+		vid.overlay({
+			class: 'overlay',
+			showBackground: false,
+			overlays: [{
+				content: 'shake',
+				start: 'play',
+				end: 5,
+				align: 'top-left'
+			}]
+		});
+	},
+};
+var VIDB1 = {
+	src: "vids/Shield.mp4",
+	type: "video/mp4",
+	end: false,
+	events: [[false, 2], [false, 3]],
+	check: [true, 5, "button", "", 0, "Help!!!"],
+	overlay: function() {
+		vid.overlay({
+			class: 'overlay',
+			showBackground: false,
+			overlays: [{
+				content: 'shake',
+				start: 'play',
+				end: 5,
+				align: 'top-left'
+			}]
+		});
+	},
+	childA: VIDBA,
+	childB: VIDBB
+};
+var VIDA1 = {
+	src: "vids/Tired.mp4",
+	type: "video/mp4",
+	end: false,
+	events: [[false, 2], [false, 3]],
+	check: [true, 5, "button", "", 0, "Help!!!"],
+	overlay: function() {
+		vid.overlay({
+			class: 'overlay',
+			showBackground: false,
+			overlays: [{
+				content: 'shake',
+				start: 'play',
+				end: 5,
+				align: 'top-left'
+			}]
+		});
+	},
+	childA: VIDAA,
+	childB: VIDAB
+};
+var VIDA = {
+	src: "vids/Powerup.mp4",
+	type: "video/mp4",
+	end: false,
+	events: [[false, 2], [false, 3]],
+	check: [false, 0],
+	overlay: function() {
+		vid.overlay({
+			class: 'overlay',
+			showBackground: false,
+			overlays: [{
+				content: 'shake',
+				start: 'play',
+				end: 5,
+				align: 'top-left'
+			}]
+		});
+	},
+	childA: VIDA1,
+	childB: VIDA1
 };
 
 var VIDB = {
-	src: "vids/b.mp4",
+	src: "vids/Vegetaup.mp4",
 	type: "video/mp4",
-	end: true,
+	end: false,
 	events: [[false, 2], [false, 3]],
 	check: [false, 0],
 	overlay: function() {
@@ -71,14 +193,16 @@ var VIDB = {
 				align: 'top-left'
 			}]
 		});
-	}
+	},
+	childA: VIDB1,
+	childB: VIDB1
 };
 
 var VIDROOT = {
-	src: "vids/testmovie.mp4",
+	src: "vids/Intro.mp4",
 	type: "video/mp4",
-	events: [[true, 2, "controlLED", "ledOn"],[true, 3, "controlLED", "ledOff"]], // [execute?, timestamp, function name, function arg]
-	check: [true, 5, "checkButton", "", 0, "Help!!!"],	// [execute?, timestamp, function name, arg, result, overlay text]
+	events: [[true, 2, "ledOn"],[true, 3, "ledOff"]], // [execute?, timestamp, function name, function arg]
+	check: [true, 5, "button", "", 0, "Help!!!"],	// [execute?, timestamp, function name, arg, result, overlay text]
 	end: false,
 	childA: VIDA,
 	childB: VIDB
@@ -92,13 +216,15 @@ vid.on('timeupdate', function() {
 	for (i = 0; i < thisVid.events.length; i++) {		// Loop through available events 
 		if (thisVid.events[i][0] & (vid.currentTime() >= thisVid.events[i][1])) {	// Event not fired yet and time is correct
 			thisVid.events[i][0] = false;				// Clear event flag
-			window[thisVid.events[i][2]](thisVid.events[i][3]);			// Execute designated function(args)
+			//window[thisVid.events[i][2]](thisVid.events[i][3]);			// Execute designated function(args)
+			actuate(thisVid.events[i][2]);
 		}
 	}
 	if ((vid.currentTime() >= thisVid.check[1]) & thisVid.check[0]) {
 		thisVid.check[0] = false;
 		document.querySelector('.content ,value').innerHTML = "HELP GOKU POWER UP!!!"
-		window[thisVid.check[2]](thisVid.check[3]);
+		//window[thisVid.check[2]](thisVid.check[3]);
+		sense(thisVid.check[2]);
 	}
 });
 
@@ -159,11 +285,36 @@ vid.overlay({
 	}]
 });
 
+function sense (funcName) {
+	$.ajax({
+        type: "POST",
+			url: apiURL + "photon",
+			data: {
+				func: funcName,
+			},
+			timeout: 7000,
+			success: function(data) {
+				console.log(funcName + " response: " + data);	
+				if (data == 1) {
+					thisVid.check[4] = 1;
+				}
+				else {
+					thisVid.check[4] = 0;
+				}
+				document.querySelector('.content ,value').innerHTML = "";
+			},
+			error: function() {
+				console.log(funcName + " timed out");
+				return false;
+			}
+		});
+}
+
+/*
 function checkButton() {
 	$.ajax({
         type: "POST",
 			url: apiURL + "photon",
-			//contentType: "text/plain",
 			data: {
 				func: "button",
 			},
@@ -183,8 +334,7 @@ function checkButton() {
 				return false;
 			}
 		});
-	//console.log("end of checkButton");
-}
+}*/
 
 vid.ready(function () {
 	vid.src({type: thisVid.type, src: thisVid.src});
@@ -192,7 +342,7 @@ vid.ready(function () {
 	
 });
 
-function controlLED(cmd) {
+function actuate(cmd) {
 	$.ajax({
         type: "POST",
 		url: apiURL + "photon",
@@ -204,7 +354,7 @@ function controlLED(cmd) {
 			console.log(data);	
 		},
 		error: function() {
-			console.log("controlLED timed out");
+			console.log(cmd + " timed out");
 			return false;
 		}
 	});

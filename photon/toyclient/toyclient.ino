@@ -33,6 +33,13 @@ int connectToMyServer(String ip) {  //Function to connect to TCP Server
 
 
 //----------------Function stubs
+int vibrate(int duration) {
+  digitalWrite(D2, HIGH);
+  delay(duration);
+  digitalWrite(D2, LOW);
+  return 1;
+}
+
 int LedOn(){
   digitalWrite(D7, HIGH);
   return 1;
@@ -40,12 +47,26 @@ int LedOn(){
 
 int LedOff(){
   digitalWrite(D7, LOW);
-  return 0;
+  return 1;
 }
 
 int time_flag = 0;
 void time_flag_set(){
   time_flag = 1;
+}
+
+int photoCheck(){
+  time_flag = 0;
+  Timer timer(2000, time_flag_set, 1);
+  timer.start();
+  while(1){
+    if (time_flag == 1) {
+      return 0;
+    }
+    if (analogRead(A0) > 2000){   // We need to calibrate this probably
+      return 1;
+    }
+  }
 }
 
 int ButtonCheck(){
@@ -57,7 +78,7 @@ int ButtonCheck(){
     if (time_flag == 1) {
       return 0;
     }
-    if (digitalRead(D2) == HIGH){
+    if (digitalRead(D3) == HIGH){
       return 1;
     }
   }
@@ -98,7 +119,10 @@ int idleDetect(){
 void setup() {
   Particle.function("connect", connectToMyServer); //Setup Photon API function "connect"
   pinMode(D7, OUTPUT); //LED
-  pinMode(D2, INPUT_PULLDOWN); //Button
+  pinMode(D2, OUTPUT); //Vibrator
+  pinMode(D3, INPUT_PULLDOWN); // Button
+  pinMode(A0, INPUT); // Photocell
+  digitalWrite(D2, LOW);
   if(!accel.begin())
   {
     while(1); // If no accel detected, just die!
@@ -123,6 +147,10 @@ void loop() {
         client.write(shakeDetect());
       } else if ('e' == cmd){
         client.write(idleDetect());
+      } else if ('f' == cmd){
+        client.write(vibrate(200));
+      } else if ('g' == cmd){
+        client.write(photoCheck());
       }
     }
   }
