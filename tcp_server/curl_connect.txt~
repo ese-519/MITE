@@ -1,2 +1,6 @@
+PhotonR:
 curl https://api.particle.io/v1/devices/29001e000447343339373536/connect -d access_token=371d886ca00a3722f39956df7b35b7c6c292d6d3 -d ip=192.168.1.42
+
+Naruto:
+curl https://api.particle.io/v1/devices/2e0025000347333437333039/connect -d access_token=371d886ca00a3722f39956df7b35b7c6c292d6d3 -d ip=192.168.1.42
 

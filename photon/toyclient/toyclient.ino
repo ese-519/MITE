@@ -123,19 +123,19 @@ int magCheck(){
   int s = 0;
   float val = -300.0;
   mag.getEvent(&event);
-  if event.magnetic.y < val{
+  if (event.magnetic.y < val){
     s = 1;
   }
   return s;
 }
 
-int servoUp(){
+int servoDown(){
   myServo.write(30); // this is the min value it could handle
   return 1;
 }
 
-int servoDown(){
-	
+int servoUp(){
+
   myServo.write(115); // this is the max value it could handle
   return 1;
 }
