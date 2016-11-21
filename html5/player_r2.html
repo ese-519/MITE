@@ -5,7 +5,7 @@
 	<link href="videojs\videojs-overlay\dist\videojs-overlay.css" rel="stylesheet">
 	<style>
 		div.overlay {
-			font-size: 500%;
+			font-size: 800%;
 		}
 	</style>
 </head>
@@ -31,7 +31,7 @@
 var actionB = document.getElementById('shake');			// Action button for testing shake input
 var vid = videojs('vidjs');								// Video player object
 var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";	// particle.io API url
-var apiURL = "http://192.168.0.101:8081/";					// Nichin's IP
+var apiURL = "http://10.0.0.109:8081/";					// Nichin's IP
 
 // Video objects start here - declare in reverse order so parents can reference their children
 var VIDBB = {
@@ -117,7 +117,7 @@ var VIDB1 = {
 	type: "video/mp4",
 	end: false,
 	events: [[false, 2], [false, 3]],
-	check: [true, 5, "button", "", 0, "Help!!!"],
+	check: [true, 5, "photoCheck", "", 0, "Shield Goku's face!"],
 	overlay: function() {
 		vid.overlay({
 			class: 'overlay',
@@ -201,8 +201,8 @@ var VIDB = {
 var VIDROOT = {
 	src: "vids/Intro.mp4",
 	type: "video/mp4",
-	events: [[true, 2, "ledOn"],[true, 3, "ledOff"]], // [execute?, timestamp, function name, function arg]
-	check: [true, 5, "button", "", 0, "Help!!!"],	// [execute?, timestamp, function name, arg, result, overlay text]
+	events: [[true, 19.5, "vibrate"]], // [execute?, timestamp, function name, function arg]
+	check: [true, 5, "photoCheck", "", 0, "Help!!!"],	// [execute?, timestamp, function name, arg, result, overlay text]
 	end: false,
 	childA: VIDA,
 	childB: VIDB
@@ -387,7 +387,7 @@ function changeSource(sources) {
 	}
 	
 $("#shake").on('click', function () {
-	connect("192.168.0.101");
+	connect("10.0.0.109");
 });	
 	
 </script> 
