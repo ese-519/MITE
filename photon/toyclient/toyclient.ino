@@ -135,6 +135,7 @@ int servoUp(){
 }
 
 int servoDown(){
+	
   myServo.write(115); // this is the max value it could handle
   return 1;
 }
@@ -191,6 +192,9 @@ void loop() {
         client.write(servoUp());
       } else if ('j' == cmd){
         client.write(servoDown());
+      } else if ('k' == cmd){
+        client.write(1);
+        vibrate(900);
       }
 
     }

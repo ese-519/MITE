@@ -5,7 +5,7 @@
 	<link href="videojs\videojs-overlay\dist\videojs-overlay.css" rel="stylesheet">
 	<style>
 		div.overlay {
-			font-size: 800%;
+			font-size: 500%;
 		}
 	</style>
 </head>
@@ -31,105 +31,52 @@
 var actionB = document.getElementById('shake');			// Action button for testing shake input
 var vid = videojs('vidjs');								// Video player object
 var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";	// particle.io API url
-var apiURL = "http://10.0.0.109:8081/";					// Nichin's IP
+var apiURL = "http://192.168.0.101:8081/";					// Nichin's IP
 
 // Video objects start here - declare in reverse order so parents can reference their children
 var VIDBB = {
 	src: "vids/Lose.mp4",
 	type: "video/mp4",
 	end: true,
-	events: [[false, 2], [false, 3]],
-	check: [false, 0],
-	overlay: function() {
-		vid.overlay({
-			class: 'overlay',
-			showBackground: false,
-			overlays: [{
-				content: 'shake',
-				start: 'play',
-				end: 5,
-				align: 'top-left'
-			}]
-		});
-	},
+	events: [[true, 0, "servoUp"], [true, 5, "servoDown"], [true, 53, "vibrateLong"], [true, 54, "vibrateLong"], [true, 55, "vibrateLong"], [true, 56, "vibrateLong"], [true, 57, "vibrateLong"], 
+	[true, 58, "vibrateLong"], [true, 59, "vibrateLong"], [true, 60, "vibrateLong"], [true, 61, "vibrateLong"], [true, 62, "vibrateLong"], [true, 63, "vibrateLong"], [true, 64, "vibrateLong"]],
+	check: [false, 0]
 };
 
 var VIDBA = {
 	src: "vids/Shielded.mp4",
 	type: "video/mp4",
 	end: true,
-	events: [[false, 2], [false, 3]],
-	check: [false, 0],
-	overlay: function() {
-		vid.overlay({
-			class: 'overlay',
-			showBackground: false,
-			overlays: [{
-				content: 'shake',
-				start: 'play',
-				end: 5,
-				align: 'top-left'
-			}]
-		});
-	},
+	events: [[true, 13, "servoDown"]],
+	check: [false, 0]
 };
 var VIDAB = {
 	src: "vids/Lose.mp4",
 	type: "video/mp4",
 	end: true,
-	events: [[false, 2], [false, 3]],
-	check: [false, 0],
-	overlay: function() {
-		vid.overlay({
-			class: 'overlay',
-			showBackground: false,
-			overlays: [{
-				content: 'shake',
-				start: 'play',
-				end: 5,
-				align: 'top-left'
-			}]
-		});
-	},
+	events: [[true, 0, "servoUp"], [true, 5, "servoDown"], [true, 53, "vibrateLong"], [true, 54, "vibrateLong"], [true, 55, "vibrateLong"], [true, 56, "vibrateLong"], [true, 57, "vibrateLong"], 
+	[true, 58, "vibrateLong"], [true, 59, "vibrateLong"], [true, 60, "vibrateLong"], [true, 61, "vibrateLong"], [true, 62, "vibrateLong"], [true, 63, "vibrateLong"], [true, 64, "vibrateLong"]],
+	check: [false, 0]
 };
 
 var VIDAA = {
 	src: "vids/Win.mp4",
 	type: "video/mp4",
 	end: true,
-	events: [[false, 2], [false, 3]],
-	check: [false, 0],
-	overlay: function() {
-		vid.overlay({
-			class: 'overlay',
-			showBackground: false,
-			overlays: [{
-				content: 'shake',
-				start: 'play',
-				end: 5,
-				align: 'top-left'
-			}]
-		});
-	},
+	events: [[true, 0, "vibrate"], [true, 1, "vibrate"], [true, 2, "vibrate"], [true, 3, "vibrate"], [true, 4, "vibrate"], [true, 5, "vibrate"], [true, 6, "vibrate"], [true, 7, "vibrate"], 
+	[true, 8, "vibrate"], [true, 9, "vibrate"], [true, 10, "vibrate"], [true, 11, "vibrate"], [true, 12, "vibrate"], [true, 13, "vibrate"], [true, 14, "vibrate"], [true, 15, "vibrate"], 
+	[true, 16, "vibrate"], [true, 17, "vibrate"], [true, 18, "vibrate"], [true, 19, "vibrate"], [true, 20, "vibrate"], [true, 21, "vibrate"], [true, 22, "vibrate"], [true, 23, "vibrate"], [true, 24, "vibrate"], 
+	[true, 25, "vibrate"], [true, 26, "vibrate"], [true, 27, "vibrate"], [true, 28, "servoUp"], [true, 53, "servoDown"]],
+	check: [false, 0]
 };
 var VIDB1 = {
 	src: "vids/Shield.mp4",
 	type: "video/mp4",
 	end: false,
-	events: [[false, 2], [false, 3]],
-	check: [true, 5, "photoCheck", "", 0, "Shield Goku's face!"],
-	overlay: function() {
-		vid.overlay({
-			class: 'overlay',
-			showBackground: false,
-			overlays: [{
-				content: 'shake',
-				start: 'play',
-				end: 5,
-				align: 'top-left'
-			}]
-		});
-	},
+	events: [[true, 20, "vibrate"], [true, 21, "servoUp"], [true, 43, "vibrateLong"], [true, 44, "vibrateLong"], [true, 45, "vibrateLong"], [true, 46, "vibrateLong"], [true, 47, "vibrateLong"], [true, 48, "vibrateLong"], 
+	[true, 49, "vibrateLong"], [true, 50, "vibrateLong"], [true, 51, "vibrateLong"], [true, 52, "vibrateLong"], [true, 53, "vibrateLong"], [true, 54, "vibrateLong"], [true, 55, "vibrateLong"], [true, 56, "vibrateLong"], [true, 57, "vibrateLong"], 
+	[true, 58, "vibrateLong"], [true, 59, "vibrateLong"]],
+	check: [true, 40, "photoCheck", "", 0, "Shield Goku's face!"],
 	childA: VIDBA,
 	childB: VIDBB
 };
@@ -137,20 +84,8 @@ var VIDA1 = {
 	src: "vids/Tired.mp4",
 	type: "video/mp4",
 	end: false,
-	events: [[false, 2], [false, 3]],
-	check: [true, 5, "button", "", 0, "Help!!!"],
-	overlay: function() {
-		vid.overlay({
-			class: 'overlay',
-			showBackground: false,
-			overlays: [{
-				content: 'shake',
-				start: 'play',
-				end: 5,
-				align: 'top-left'
-			}]
-		});
-	},
+	events: [[true, 24.3, "vibrate"]],
+	check: [true, 40, "magCheck", "", 0, "Regenerate strength with Goku's vest!"],
 	childA: VIDAA,
 	childB: VIDAB
 };
@@ -158,20 +93,8 @@ var VIDA = {
 	src: "vids/Powerup.mp4",
 	type: "video/mp4",
 	end: false,
-	events: [[false, 2], [false, 3]],
+	events: [[true, 22, "vibrate"], [true, 22.5, "vibrate"], [true, 21, "vibrate"], [true, 21.5, "vibrate"], [true, 28, "servoUp"], [true, 30, "servoDown"], [true, 35, "servoUp"], [true, 38, "servoDown"]],
 	check: [false, 0],
-	overlay: function() {
-		vid.overlay({
-			class: 'overlay',
-			showBackground: false,
-			overlays: [{
-				content: 'shake',
-				start: 'play',
-				end: 5,
-				align: 'top-left'
-			}]
-		});
-	},
 	childA: VIDA1,
 	childB: VIDA1
 };
@@ -180,20 +103,8 @@ var VIDB = {
 	src: "vids/Vegetaup.mp4",
 	type: "video/mp4",
 	end: false,
-	events: [[false, 2], [false, 3]],
+	events: [[true, 31, "vibrate"], [true, 47.6, "vibrate"]],
 	check: [false, 0],
-	overlay: function() {
-		vid.overlay({
-			class: 'overlay',
-			showBackground: false,
-			overlays: [{
-				content: 'noshake',
-				start: 'play',
-				end: 5,
-				align: 'top-left'
-			}]
-		});
-	},
 	childA: VIDB1,
 	childB: VIDB1
 };
@@ -201,8 +112,8 @@ var VIDB = {
 var VIDROOT = {
 	src: "vids/Intro.mp4",
 	type: "video/mp4",
-	events: [[true, 19.5, "vibrate"]], // [execute?, timestamp, function name, function arg]
-	check: [true, 5, "photoCheck", "", 0, "Help!!!"],	// [execute?, timestamp, function name, arg, result, overlay text]
+	events: [[true, 9, "servoUp"], [true, 12, "servoDown"], [true, 14.25, "vibrate"], [true, 20, "vibrate"]], // [execute?, timestamp, function name, function arg]
+	check: [true, 40, "shake", "", 0, "Shake Goku to power up!"],	// [execute?, timestamp, function name, arg, result, overlay text]
 	end: false,
 	childA: VIDA,
 	childB: VIDB
@@ -222,7 +133,7 @@ vid.on('timeupdate', function() {
 	}
 	if ((vid.currentTime() >= thisVid.check[1]) & thisVid.check[0]) {
 		thisVid.check[0] = false;
-		document.querySelector('.content ,value').innerHTML = "HELP GOKU POWER UP!!!"
+		//document.querySelector('.content ,value').innerHTML = "HELP GOKU POWER UP!!!"
 		//window[thisVid.check[2]](thisVid.check[3]);
 		sense(thisVid.check[2]);
 	}
@@ -233,16 +144,16 @@ vid.on('ended', function() {
 	if (!thisVid.end) {		// Not the last video in the tree
 		if (thisVid.check[4] == 1) {
 			console.log("Positive input received");
-			document.querySelector('.content ,value').innerHTML = "GOOD JOB!!!"
+			//document.querySelector('.content ,value').innerHTML = "GOOD JOB!!!"
 			thisVid = thisVid.childA;
 			changeSource({type: thisVid.type, src: thisVid.src});
 		}
 		else {
 			console.log("Negative/no input received");
-			document.querySelector('.content ,value').innerHTML = "YOU DONE GOOFED."
+			//document.querySelector('.content ,value').innerHTML = "YOU DONE GOOFED."
 			thisVid = thisVid.childB;
 			changeSource({type: thisVid.type, src: thisVid.src});
-			VIDROOT.childB.overlay();
+			//VIDROOT.childB.overlay();
 		}
 		//actionB.style.visibility = 'visible';
 		if (thisVid.check[0]) {
@@ -251,8 +162,8 @@ vid.on('ended', function() {
 				showBackground: false,
 				overlays: [{
 					content: thisVid.check[5],
-					start: thisVid.check[1] - 1,
-					end: thisVid.check[1] + 5,
+					start: thisVid.check[1] - 5,
+					end: thisVid.check[1] + 3,
 					align: 'top-left'
 				}]
 			});
@@ -301,7 +212,7 @@ function sense (funcName) {
 				else {
 					thisVid.check[4] = 0;
 				}
-				document.querySelector('.content ,value').innerHTML = "";
+				//document.querySelector('.content ,value').innerHTML = "";
 			},
 			error: function() {
 				console.log(funcName + " timed out");
@@ -387,7 +298,7 @@ function changeSource(sources) {
 	}
 	
 $("#shake").on('click', function () {
-	connect("10.0.0.109");
+	connect("192.168.0.101");
 });	
 	
 </script> 

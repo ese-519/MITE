@@ -71,6 +71,19 @@ int photoCheck(){
   }
 }
 
+int magCheck(){
+  return 1;
+}
+
+int servoUp(){
+  //myServo.write(30); // this is the min value it could handle
+  return 2;
+}
+
+int servoDown(){
+  //myServo.write(115); // this is the max value it could handle
+  return 3;
+}
 int ButtonCheck(){
   //check for a button press in within the next two seconds
   time_flag = 0;
@@ -171,11 +184,6 @@ void setup() {
   }*/
 }
 void loop() {
-  /*
-  digitalWrite(D7, HIGH);
-  delay(1000);
-  digitalWrite(D7, LOW);
-*/
   if (client.connected()) {
     if (client.available()) {
       char cmd = client.read();
@@ -193,7 +201,17 @@ void loop() {
         client.write(vibrate(200));
       } else if ('g' == cmd){
         client.write(photoCheck());
+      } else if ('h' == cmd){
+        client.write(magCheck());
+      } else if ('i' == cmd){
+        client.write(servoUp());
+      } else if ('j' == cmd){
+        client.write(servoDown());
+      } else if ('k' == cmd){
+        client.write(1);
+        vibrate(900);
       }
+
     }
   }
 }

@@ -1,0 +1,37 @@
+Intro
+Arm up/down: 9/12
+Vibrate: 14, 19.5
+Shake?: 40
+
+Powerup
+Vibrate: 20-22, several times
+Arm up: 28
+Arm down: 30
+Up: 35
+Down: 38
+
+Tired
+Vib: 24
+Magnet?: 40
+
+Win
+Vib: 0-27
+Arm: 28
+
+Lose
+Arm: 0/5
+Vib: 53-65
+
+Vegetaup
+Vib: 31, 47
+Arm:
+
+Shield
+Vib: 20, 43-60
+Arm: 21 (stay up)
+Photo?: 40
+
+
+Shielded
+Vib: 
+Arm: 13 (down)

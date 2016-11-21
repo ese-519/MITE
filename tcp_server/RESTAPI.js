@@ -67,6 +67,18 @@ app.post('/photon', function(req, res) {
 		case "photoCheck":
 			sock.write('g');
 			break;
+		case "magCheck":
+			sock.write('h');
+			break;
+		case "servoUp":
+			sock.write('i');
+			break;
+		case "servoDown":
+			sock.write('j');
+			break;
+		case "vibrateLong":
+			sock.write('k');
+			break;
 		default:
 			res.end("Invalid function call");
 			break;
