@@ -63,7 +63,7 @@ int photoCheck(){
     if (time_flag == 1) {
       return 0;
     }
-    if (analogRead(A0) > 2000){   // We need to calibrate this probably
+    if (analogRead(A0) < 2000){
       return 1;
     }
   }
