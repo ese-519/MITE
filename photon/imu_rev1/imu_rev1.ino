@@ -1,10 +1,9 @@
 #include "Particle.h"
-
 #include "Adafruit_10DOF_IMU.h"
 
 /* Assign a unique ID to the sensors */
 Adafruit_LSM303_Accel_Unified accel = Adafruit_LSM303_Accel_Unified(30301);
-//Adafruit_LSM303_Mag_Unified   mag   = Adafruit_LSM303_Mag_Unified(30302);
+Adafruit_LSM303_Mag_Unified   mag   = Adafruit_LSM303_Mag_Unified(30302);
 //Adafruit_BMP085_Unified       bmp   = Adafruit_BMP085_Unified(18001);
 Adafruit_L3GD20_Unified       gyro  = Adafruit_L3GD20_Unified(20);
 
@@ -34,7 +33,7 @@ void displaySensorDetails(void)
   Serial.println(F("------------------------------------"));
   Serial.println(F(""));
 
-  /*mag.getSensor(&sensor);
+  mag.getSensor(&sensor);
   Serial.println(F("----------- MAGNETOMETER -----------"));
   Serial.print  (F("Sensor:       ")); Serial.println(sensor.name);
   Serial.print  (F("Driver Ver:   ")); Serial.println(sensor.version);
@@ -43,7 +42,7 @@ void displaySensorDetails(void)
   Serial.print  (F("Min Value:    ")); Serial.print(sensor.min_value); Serial.println(F(" uT"));
   Serial.print  (F("Resolution:   ")); Serial.print(sensor.resolution); Serial.println(F(" uT"));
   Serial.println(F("------------------------------------"));
-  Serial.println(F(""));*/
+  Serial.println(F(""));
 
  /* bmp.getSensor(&sensor);
   Serial.println(F("-------- PRESSURE/ALTITUDE ---------"));
@@ -61,6 +60,8 @@ void displaySensorDetails(void)
 
 void setup(void)
 {
+  pinMode(D2, OUTPUT);
+  digitalWrite(D2,LOW);
   Serial.begin(115200);
   Serial.println(F("Adafruit 10DOF Tester")); Serial.println("");
 
@@ -71,12 +72,12 @@ void setup(void)
     Serial.println(F("Ooops, no LSM303 detected ... Check your wiring!"));
     while(1);
   }
-  //if(!mag.begin())
-  //{
+  if(!mag.begin())
+  {
     /* There was a problem detecting the LSM303 ... check your connections */
-   /* Serial.println("Ooops, no LSM303 detected ... Check your wiring!");
+    Serial.println("Ooops, no LSM303 detected ... Check your wiring!");
     while(1);
-  }*/
+  }
   /*if(!bmp.begin())
   {
      There was a problem detecting the BMP085 ... check your connections
@@ -106,12 +107,12 @@ void loop(void)
   Serial.print("Y: "); Serial.print(event.acceleration.y); Serial.print("  ");
   Serial.print("Z: "); Serial.print(event.acceleration.z); Serial.print("  "); Serial.println("m/s^2 ");
 
-  /* Display the results (magnetic vector values are in micro-Tesla (uT)) */
-  /*mag.getEvent(&event);
+  /*Display the results (magnetic vector values are in micro-Tesla (uT)) */
+  mag.getEvent(&event);
   Serial.print(F("MAG   "));
   Serial.print("X: "); Serial.print(event.magnetic.x); Serial.print("  ");
   Serial.print("Y: "); Serial.print(event.magnetic.y); Serial.print("  ");
-  Serial.print("Z: "); Serial.print(event.magnetic.z); Serial.print("  ");Serial.println("uT");*/
+  Serial.print("Z: "); Serial.print(event.magnetic.z); Serial.print("  ");Serial.println("uT");
 
   /* Display the results (gyrocope values in rad/s) */
   gyro.getEvent(&event);

@@ -2,9 +2,13 @@
 #include "Adafruit_10DOF_IMU.h"
 #include <math.h>
 
+//declare a servo
+Servo myServo;
+
 // Assign ID to the sensors
 Adafruit_LSM303_Accel_Unified accel = Adafruit_LSM303_Accel_Unified(30301);
 Adafruit_L3GD20_Unified       gyro  = Adafruit_L3GD20_Unified(20);
+Adafruit_LSM303_Mag_Unified   mag   = Adafruit_LSM303_Mag_Unified(30302);
 
 //--------------Setting up TCP Client
 TCPClient client;
@@ -113,7 +117,30 @@ int idleDetect(){
   }
   return s;
 }
+
+int magCheck(){
+  sensors_event_t event;
+  int s = 0;
+  float val = -300.0;
+  mag.getEvent(&event);
+  if event.magnetic.y < val{
+    s = 1;
+  }
+  return s;
+}
+
+int servoUp(){
+  myServo.write(30); // this is the min value it could handle
+  return 1;
+}
+
+int servoDown(){
+  myServo.write(115); // this is the max value it could handle
+  return 1;
+}
+
 //----------------End function stubs
+
 
 
 void setup() {
@@ -123,6 +150,13 @@ void setup() {
   pinMode(D3, INPUT_PULLDOWN); // Button
   pinMode(A0, INPUT); // Photocell
   digitalWrite(D2, LOW);
+  int servoPin = A5;
+  myServo.attach(servoPin);
+
+  if(!mag.begin())
+  {
+    while(1); // If no mag detected, just die!
+  }
   if(!accel.begin())
   {
     while(1); // If no accel detected, just die!
@@ -151,7 +185,14 @@ void loop() {
         client.write(vibrate(200));
       } else if ('g' == cmd){
         client.write(photoCheck());
+      } else if ('h' == cmd){
+        client.write(magCheck());
+      } else if ('i' == cmd){
+        client.write(servoUp());
+      } else if ('j' == cmd){
+        client.write(servoDown());
       }
+
     }
   }
 }

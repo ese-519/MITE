@@ -21,25 +21,8 @@ int idleDetect(){
 }
 
 
-int shakeDetect(){
-  sensors_event_t event;
-  int i;
-  int s = 0;
-  float val = 1.0;
-  for (i =0; i < 8; i++ ){
-    gyro.getEvent(&event);
-    if (!(fabs(event.gyro.x) > val || fabs(event.gyro.y) >  val || fabs(event.gyro.z) > val)){
-      s += 1;
-    }
-    delay(100);
-  }
-  return (s <= 3);
-}
-
 void setup(void)
 {
-  pinMode(D2, OUTPUT);
-  digitalWrite(D2,LOW);
   Serial.begin(115200);
   Serial.println(F("Adafruit 10DOF Tester")); Serial.println("");
 
