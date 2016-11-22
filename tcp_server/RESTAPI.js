@@ -79,6 +79,9 @@ app.post('/photon', function(req, res) {
 		case "vibrateLong":
 			sock.write('k');
 			break;
+		case "punch":
+			sock.write('l');
+			break;
 		default:
 			res.end("Invalid function call");
 			break;

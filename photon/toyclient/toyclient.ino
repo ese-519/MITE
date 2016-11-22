@@ -91,16 +91,16 @@ int ButtonCheck(){
 int shakeDetect(){
   sensors_event_t event;
   int i;
-  int s = 1;
+  int s = 0;
   float val = 1.0;
-  for (i =0; i < 6; i++ ){
+  for (i =0; i < 8; i++ ){
     gyro.getEvent(&event);
     if (!(fabs(event.gyro.x) > val || fabs(event.gyro.y) >  val || fabs(event.gyro.z) > val)){
-      s = 0;
+      s += 1;
     }
     delay(100);
   }
-  return s;
+  return (s <= 3);
 }
 
 int idleDetect(){
@@ -121,9 +121,9 @@ int idleDetect(){
 int magCheck(){
   sensors_event_t event;
   int s = 0;
-  float val = -300.0;
+  float val = -100.0;
   mag.getEvent(&event);
-  if (event.magnetic.y < val){
+  if (event.magnetic.y < val || event.magnetic.x < val || event.magnetic.z < val){
     s = 1;
   }
   return s;
@@ -135,9 +135,20 @@ int servoDown(){
 }
 
 int servoUp(){
-
   myServo.write(115); // this is the max value it could handle
   return 1;
+}
+
+int punch(int n) {
+  myServo.write(60);
+  delay(200);
+  for (int i = 0; i < n; i++) {
+    myServo.write(85);
+    delay(200);
+    myServo.write(60);
+    delay(200);
+  }
+  myServo.write(30);
 }
 
 //----------------End function stubs
@@ -195,8 +206,10 @@ void loop() {
       } else if ('k' == cmd){
         client.write(1);
         vibrate(900);
+      } else if ('l' == cmd){
+        client.write(1);
+        punch(7);
       }
-
     }
   }
 }
