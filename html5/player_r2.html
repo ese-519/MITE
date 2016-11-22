@@ -31,7 +31,7 @@
 var actionB = document.getElementById('shake');			// Action button for testing shake input
 var vid = videojs('vidjs');								// Video player object
 var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";	// particle.io API url
-var apiURL = "http://192.168.0.101:8081/";					// Nichin's IP
+var apiURL = "http://192.168.0.151:8081/";					// API IP
 
 // Video objects start here - declare in reverse order so parents can reference their children
 var VIDBB = {
@@ -122,40 +122,31 @@ var VIDROOT = {
 
 var thisVid = VIDROOT;
 
-//actionB.style.visibility = 'hidden';
 vid.on('timeupdate', function() {
 	for (i = 0; i < thisVid.events.length; i++) {		// Loop through available events 
 		if (thisVid.events[i][0] & (vid.currentTime() >= thisVid.events[i][1])) {	// Event not fired yet and time is correct
 			thisVid.events[i][0] = false;				// Clear event flag
-			//window[thisVid.events[i][2]](thisVid.events[i][3]);			// Execute designated function(args)
 			actuate(thisVid.events[i][2]);
 		}
 	}
 	if ((vid.currentTime() >= thisVid.check[1]) & thisVid.check[0]) {
 		thisVid.check[0] = false;
-		//document.querySelector('.content ,value').innerHTML = "HELP GOKU POWER UP!!!"
-		//window[thisVid.check[2]](thisVid.check[3]);
 		sense(thisVid.check[2]);
 	}
 });
 
 vid.on('ended', function() {
-	//console.log("ended event fired");
 	if (!thisVid.end) {		// Not the last video in the tree
 		if (thisVid.check[4] == 1) {
 			console.log("Positive input received");
-			//document.querySelector('.content ,value').innerHTML = "GOOD JOB!!!"
 			thisVid = thisVid.childA;
 			changeSource({type: thisVid.type, src: thisVid.src});
 		}
 		else {
 			console.log("Negative/no input received");
-			//document.querySelector('.content ,value').innerHTML = "YOU DONE GOOFED."
 			thisVid = thisVid.childB;
 			changeSource({type: thisVid.type, src: thisVid.src});
-			//VIDROOT.childB.overlay();
 		}
-		//actionB.style.visibility = 'visible';
 		if (thisVid.check[0]) {
 			vid.overlay({
 				class: 'overlay',
@@ -212,7 +203,6 @@ function sense (funcName) {
 				else {
 					thisVid.check[4] = 0;
 				}
-				//document.querySelector('.content ,value').innerHTML = "";
 			},
 			error: function() {
 				console.log(funcName + " timed out");
@@ -220,32 +210,6 @@ function sense (funcName) {
 			}
 		});
 }
-
-/*
-function checkButton() {
-	$.ajax({
-        type: "POST",
-			url: apiURL + "photon",
-			data: {
-				func: "button",
-			},
-			timeout: 7000,
-			success: function(data) {
-				console.log("Button response: " + data);	
-				if (data == 1) {
-					thisVid.check[4] = 1;
-				}
-				else {
-					thisVid.check[4] = 0;
-				}
-				document.querySelector('.content ,value').innerHTML = "";
-			},
-			error: function() {
-				console.log("checkButton timed out");
-				return false;
-			}
-		});
-}*/
 
 vid.ready(function () {
 	vid.src({type: thisVid.type, src: thisVid.src});
@@ -274,7 +238,7 @@ function actuate(cmd) {
 function connect(ipAddress) {
 	$.ajax({
         type: "POST",
-		url: "https://api.particle.io/v1/devices/2a005e001551353531343431/connect",
+		url: "https://api.particle.io/v1/devices/29001e000447343339373536/connect",
 		data: {
 			access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
 			ip: ipAddress
@@ -298,7 +262,7 @@ function changeSource(sources) {
 	}
 	
 $("#shake").on('click', function () {
-	connect("192.168.0.101");
+	connect("192.168.0.151");
 });	
 	
 </script> 
