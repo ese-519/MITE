@@ -82,6 +82,9 @@ app.post('/photon', function(req, res) {
 		case "punch":
 			sock.write('l');
 			break;
+		case "servoMid":
+			sock.write('m');
+			break;
 		default:
 			res.end("Invalid function call");
 			break;

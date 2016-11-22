@@ -120,13 +120,16 @@ int idleDetect(){
 
 int magCheck(){
   sensors_event_t event;
-  int s = 0;
+  //int s = 0;
   float val = -100.0;
-  mag.getEvent(&event);
-  if (event.magnetic.y < val || event.magnetic.x < val || event.magnetic.z < val){
-    s = 1;
+  for (int i = 0; i < 6; i++) {
+	mag.getEvent(&event);
+	if (event.magnetic.y < val || event.magnetic.x < val || event.magnetic.z < val){
+		return 1;
+	}
+	delay(100);
   }
-  return s;
+  return 0;
 }
 
 int servoDown(){
@@ -136,6 +139,11 @@ int servoDown(){
 
 int servoUp(){
   myServo.write(115); // this is the max value it could handle
+  return 1;
+}
+
+int servoMid(){
+  myServo.write(60); // this is the max value it could handle
   return 1;
 }
 
@@ -209,7 +217,9 @@ void loop() {
       } else if ('l' == cmd){
         client.write(1);
         punch(7);
-      }
+      } else if ('m' == cmd) {
+		client.write(servoMid());
+	  }
     }
   }
 }

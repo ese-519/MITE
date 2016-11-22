@@ -21,31 +21,20 @@
 	>
 </video>
 <br>
-<button id="shake" style="height:20px;width:150px;font-size:10px">Connect to photon</button>
+<button id="connect" style="height:20px;width:150px;font-size:10px">Connect to photon</button>
 
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="videojs\video.js\dist\video.js"></script>
 <script src="videojs\videojs-overlay\dist\videojs-overlay.js"></script>
 <script>
 
-var actionB = document.getElementById('shake');			// Action button for testing shake input
+var actionB = document.getElementById('connect');			// Action button for testing shake input
 var vid = videojs('vidjs');								// Video player object
-var thisIP = "192.168.0.101";
-var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";	// particle.io API url
-var apiURL = "http://" + thisIP + ":8081/";
-//var apiURL = "http://192.168.0.151:8081/";					// API IP
+var thisIP = "10.0.0.109";
+//var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";	// particle.io API url
+var apiURL = "http://" + thisIP + ":8081/";				// API IP
 
 // Video objects start here - declare in reverse order so parents can reference their children
-/*
-var VIDBB = {
-	src: "vids/Lose.mp4",
-	type: "video/mp4",
-	end: true,
-	events: [[true, 0, "servoUp"], [true, 5, "servoDown"], [true, 53, "vibrateLong"], [true, 54, "vibrateLong"], [true, 55, "vibrateLong"], [true, 56, "vibrateLong"], [true, 57, "vibrateLong"], 
-	[true, 58, "vibrateLong"], [true, 59, "vibrateLong"], [true, 60, "vibrateLong"], [true, 61, "vibrateLong"], [true, 62, "vibrateLong"], [true, 63, "vibrateLong"], [true, 64, "vibrateLong"]],
-	check: [false, 0]
-};*/
-
 var VIDBA = {
 	src: "vids/Shielded.mp4",
 	type: "video/mp4",
@@ -62,7 +51,6 @@ var VIDAB = {
 	[true, 45, "vibrateLong"], [true, 46, "vibrateLong"], [true, 47, "vibrateLong"], [true, 48, "vibrateLong"]],
 	check: [false, 0]
 };
-
 var VIDAA = {
 	src: "vids/Win.mp4",
 	type: "video/mp4",
@@ -97,23 +85,12 @@ var VIDA = {
 	src: "vids/Powerup.mp4",
 	type: "video/mp4",
 	end: false,
-	events: [[true, 18, "vibrate"], [true, 22, "vibrate"], [true, 22.5, "vibrate"], [true, 21, "vibrate"], [true, 21.5, "vibrate"], [true, 28, "servoUp"], [true, 29, "servoDown"], [true, 35, "servoUp"], [true, 38, "servoDown"],
+	events: [[true, 0, "servoMid"], [true, 18, "vibrate"], [true, 22, "vibrate"], [true, 22.5, "vibrate"], [true, 21, "vibrate"], [true, 21.5, "vibrate"], [true, 28, "servoUp"], [true, 29, "servoDown"], [true, 35, "servoUp"], [true, 38, "servoDown"],
 	[true, 39, "punch"], [true, 44, "servoUp"], [true, 44.5, "servoDown"]],
 	check: [false, 0],
 	childA: VIDA1,
 	childB: VIDA1
 };
-/*
-var VIDB = {
-	src: "vids/VegetaShield.mp4",
-	type: "video/mp4",
-	end: false,
-	events: [[true, 31, "vibrate"], [true, 47.6, "vibrate"]],
-	check: [false, 0],
-	childA: VIDB1,
-	childB: VIDB1
-};
-*/
 var VIDROOT = {
 	src: "vids/Intro.mp4",
 	type: "video/mp4",
@@ -186,8 +163,8 @@ vid.overlay({
 	showBackground: false,
 	overlays: [{
 		content: thisVid.check[5],
-		start: thisVid.check[1] - 1,
-		end: thisVid.check[1] + 5,
+		start: thisVid.check[1] - 5,
+		end: thisVid.check[1] + 3,
 		align: 'top-left'
 	}]
 });
@@ -266,7 +243,7 @@ function changeSource(sources) {
 		vid.play();
 	}
 	
-$("#shake").on('click', function () {
+$("#connect").on('click', function () {
 	connect(thisIP);
 });	
 	
