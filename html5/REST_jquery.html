@@ -9,21 +9,40 @@
 <button id="ledOff">LED Off</button>
 <button id="checkButton">Button POST</button>
 <button id="readButton">Button GET</button>
+<button id="connectButton">Connect to Photon</button>
 
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
 <script>
 var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";
-var nichURL = "http://192.168.0.101:8081/";
-var buttonCheckURL = "http://10.0.0.75:8081/button";
-var buttonReadURL = "http://10.0.0.75:8081/button";
+var thisIP = "192.168.0.101";
+var apiURL = "http://" + thisIP + ":8081/";
 
+function connect(ipAddress) {
+	$.ajax({
+        type: "POST",
+		url: "https://api.particle.io/v1/devices/2a005e001551353531343431/connect",
+		data: {
+			access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
+			ip: ipAddress
+		},
+		timeout: 7000,
+		success: function(data) {
+			console.log("Connected to photon!");	
+			console.log(data);
+		},
+		error: function() {
+			console.log("Could not connect to photon!");
+			return false;
+		}
+	});
+}
 $("#ledOn").on('click', function () {
 	$.ajax({
         		type: "POST",
-        		url: nichURL + "photon",
+        		url: apiURL + "photon",
         		data: {
-          		func: "servoUp",
+          		func: "ledOn",
         		},
 				timeout: 7000,
 				success: function(data) {
@@ -38,9 +57,9 @@ $("#ledOn").on('click', function () {
 $("#ledOff").on('click', function () {
 	$.ajax({
         		type: "POST",
-        		url: nichURL + "photon",
+        		url: apiURL + "photon",
         		data: {
-          		func: "servoDown",
+          		func: "ledOff",
         		},
 				timeout: 7000,
 				success: function(data) {
@@ -55,7 +74,7 @@ $("#ledOff").on('click', function () {
 $("#checkButton").on('click', function () {
 	$.ajax({
         		type: "POST",
-        		url: nichURL + "photon",
+        		url: apiURL + "photon",
         		data: {
           		func: "button",
         		},
@@ -72,7 +91,7 @@ $("#checkButton").on('click', function () {
 $("#readButton").on('click', function () {
 	$.ajax({
         		type: "POST",
-        		url: nichURL + "photon",
+        		url: apiURL + "photon",
         		data: {
           		func: "magCheck",
         		},
@@ -85,6 +104,9 @@ $("#readButton").on('click', function () {
 				}
 	  		});
 });	
+$("#connectButton").on('click', function () {
+	connect(thisIP);
+});
 </script> 
 <div class="content"><span class="value"></span></div>
 </body>
