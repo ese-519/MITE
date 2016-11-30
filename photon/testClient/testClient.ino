@@ -9,6 +9,14 @@
 //--------------Setting up TCP Client
 
 TCPClient client;
+Timer idleTimer(3000, getAttention);
+
+void getAttention() {
+  // say something, do stuff
+  digitalWrite(D7, HIGH);
+  delay(100);
+  digitalWrite(D7, LOW);
+}
 
 void ipArrayFromString(byte ipArray[], String ipString) {  //Function to Parse IP address
   int dot1 = ipString.indexOf('.');
@@ -174,6 +182,8 @@ void setup() {
   pinMode(D1, INPUT_PULLDOWN);  // Fake idle
   pinMode(A0, INPUT); // Photocell
   digitalWrite(D2, LOW);
+
+  idleTimer.start();
 /*  if(!accel.begin())
   {
     while(1); // If no accel detected, just die!
@@ -213,5 +223,8 @@ void loop() {
       }
 
     }
+  }
+  if (digitalRead(D3)) {
+    idleTimer.reset();
   }
 }

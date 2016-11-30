@@ -2,8 +2,9 @@
 #include "Adafruit_10DOF_IMU.h"
 #include <math.h>
 
-//declare a servo
-Servo myServo;
+
+Servo myServo;  //declare a servo
+int score = 0;
 
 // Assign ID to the sensors
 Adafruit_LSM303_Accel_Unified accel = Adafruit_LSM303_Accel_Unified(30301);
@@ -53,7 +54,7 @@ int LedOff(){
   digitalWrite(D7, LOW);
   return 1;
 }
-
+// General purpose timer callback function for use in timed sensing
 int time_flag = 0;
 void time_flag_set(){
   time_flag = 1;
@@ -64,11 +65,13 @@ int photoCheck(){
   Timer timer(2000, time_flag_set, 1);
   timer.start();
   while(1){
-    if (time_flag == 1) {
+    if (time_flag == 1) { // Timeout condition
       return 0;
     }
     if (analogRead(A0) < 2000){
-      return 1;
+      score += 1;
+      timer.dispose();    // Get rid of the timer
+      return 1; // Positive input sensed, stop
     }
   }
 }
@@ -83,6 +86,8 @@ int ButtonCheck(){
       return 0;
     }
     if (digitalRead(D3) == HIGH){
+      score += 1;
+      timer.dispose();    // Get rid of the timer
       return 1;
     }
   }
@@ -99,6 +104,9 @@ int shakeDetect(){
       s += 1;
     }
     delay(100);
+  }
+  if (s <= 3) {
+    score += 1;
   }
   return (s <= 3);
 }
@@ -120,22 +128,30 @@ int idleDetect(){
 
 int magCheck(){
   sensors_event_t event;
-  int s = 0;
   float val = -100.0;
-  mag.getEvent(&event);
-  if (event.magnetic.y < val || event.magnetic.x < val || event.magnetic.z < val){
-    s = 1;
+  for (int i = 0; i < 6; i++) {
+	mag.getEvent(&event);
+	if (event.magnetic.y < val || event.magnetic.x < val || event.magnetic.z < val){
+    score += 1;
+		return 1;
+	}
+	delay(100);
   }
-  return s;
+  return 0;
 }
 
 int servoDown(){
-  myServo.write(30); // this is the min value it could handle
+  myServo.write(30);
   return 1;
 }
 
 int servoUp(){
-  myServo.write(115); // this is the max value it could handle
+  myServo.write(115);
+  return 1;
+}
+
+int servoMid(){
+  myServo.write(60);
   return 1;
 }
 
@@ -209,7 +225,17 @@ void loop() {
       } else if ('l' == cmd){
         client.write(1);
         punch(7);
-      }
+      } else if ('m' == cmd) {
+		    client.write(servoMid());
+	    }
     }
+  }
+  if (score == 1) {
+    //level 1
+  } else if (score == 2) {
+    //level 2
+  } else if (score > 2) {
+    //level 3 - do crazy stuff here
+    score = 0; // reset to 0
   }
 }
