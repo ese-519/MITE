@@ -14,14 +14,14 @@
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
 <script>
-var POSTurl = "https://api.particle.io/v1/devices/2a005e001551353531343431/";
+var POSTurl = "https://api.particle.io/v1/devices/29001e000447343339373536/";
 var thisIP = "192.168.0.101";
 var apiURL = "http://" + thisIP + ":8081/";
 
 function connect(ipAddress) {
 	$.ajax({
         type: "POST",
-		url: "https://api.particle.io/v1/devices/2a005e001551353531343431/connect",
+		url: "https://api.particle.io/v1/devices/29001e000447343339373536/connect",
 		data: {
 			access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
 			ip: ipAddress
@@ -76,7 +76,7 @@ $("#checkButton").on('click', function () {
         		type: "POST",
         		url: apiURL + "photon",
         		data: {
-          		func: "button",
+          		func: "shake",
         		},
 				timeout: 7000,
 				success: function(data) {

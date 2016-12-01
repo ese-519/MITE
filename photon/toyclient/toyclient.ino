@@ -1,10 +1,12 @@
 #include "Particle.h"
 #include "Adafruit_10DOF_IMU.h"
 #include <math.h>
+#include "Emic2TTS.h"
 
-
+Emic2TtsModule emic;  // TTS module
 Servo myServo;  //declare a servo
 int score = 0;
+bool scoreUp = false;
 
 // Assign ID to the sensors
 Adafruit_LSM303_Accel_Unified accel = Adafruit_LSM303_Accel_Unified(30301);
@@ -38,6 +40,28 @@ int connectToMyServer(String ip) {  //Function to connect to TCP Server
 
 
 //----------------Function stubs
+Timer idleTimer(15000, getAttention);
+void getAttention() {
+  // say something, do stuff
+  //emic.say("Play with me!");
+}
+Timer idleWatchDog(1000, idleCheckQuick);
+void idleCheckQuick(){
+  sensors_event_t event;
+  float val = 0.08;
+  gyro.getEvent(&event);
+  Serial.println(event.gyro.x);
+  Serial.println(event.gyro.y);
+  Serial.println(event.gyro.z);
+  if (fabs(event.gyro.x) > val || fabs(event.gyro.y) >  val || fabs(event.gyro.z) > val){
+    Serial.println("idleTimer reset");
+    idleTimer.reset();
+  }
+}
+
+
+
+
 int vibrate(int duration) {
   digitalWrite(D2, HIGH);
   delay(duration);
@@ -69,7 +93,7 @@ int photoCheck(){
       return 0;
     }
     if (analogRead(A0) < 2000){
-      score += 1;
+      scoreUp = true;
       timer.dispose();    // Get rid of the timer
       return 1; // Positive input sensed, stop
     }
@@ -86,7 +110,7 @@ int ButtonCheck(){
       return 0;
     }
     if (digitalRead(D3) == HIGH){
-      score += 1;
+      scoreUp = true;
       timer.dispose();    // Get rid of the timer
       return 1;
     }
@@ -106,7 +130,7 @@ int shakeDetect(){
     delay(100);
   }
   if (s <= 3) {
-    score += 1;
+    scoreUp = true;
   }
   return (s <= 3);
 }
@@ -132,11 +156,13 @@ int magCheck(){
   for (int i = 0; i < 6; i++) {
 	mag.getEvent(&event);
 	if (event.magnetic.y < val || event.magnetic.x < val || event.magnetic.z < val){
-    score += 1;
+    scoreUp = true;
+    emic.say("I feel better!");
 		return 1;
 	}
 	delay(100);
   }
+  emic.say("So tired");
   return 0;
 }
 
@@ -172,15 +198,18 @@ int punch(int n) {
 
 
 void setup() {
+  Serial.begin(115200);
   Particle.function("connect", connectToMyServer); //Setup Photon API function "connect"
   pinMode(D7, OUTPUT); //LED
   pinMode(D2, OUTPUT); //Vibrator
   pinMode(D3, INPUT_PULLDOWN); // Button
   pinMode(A0, INPUT); // Photocell
   digitalWrite(D2, LOW);
+  emic.init();
   int servoPin = A5;
   myServo.attach(servoPin);
-
+  idleTimer.start();
+  idleWatchDog.start();
   if(!mag.begin())
   {
     while(1); // If no mag detected, just die!
@@ -230,12 +259,19 @@ void loop() {
 	    }
     }
   }
-  if (score == 1) {
-    //level 1
-  } else if (score == 2) {
-    //level 2
-  } else if (score > 2) {
-    //level 3 - do crazy stuff here
-    score = 0; // reset to 0
-  }
+  if (scoreUp) {
+    score += 1;
+    scoreUp = false;
+    if (score == 1) {
+      //level 1
+      emic.say("1");
+    } else if (score == 2) {
+      //level 2
+      emic.say("2");
+    } else if (score > 2) {
+      //level 3 - do crazy stuff here
+      emic.say("3");
+      score = 0; // reset to 0
+    }
+}
 }
