@@ -36,7 +36,7 @@ int connectToMyServer(String ip) {  //Function to connect to TCP Server
   byte serverAddress[4];
   ipArrayFromString(serverAddress, ip);
 
-  if (client.connect(serverAddress, 9000)) {
+  if (client.connect(serverAddress, 9001)) {
     for (int i=0 ; i < 4 ; i++){
       colorWipe(strip.Color(  0,   0, 20), 0);  // Blue
       delay(100);
@@ -53,10 +53,10 @@ int connectToMyServer(String ip) {  //Function to connect to TCP Server
 
 
 //----------------Function stubs
-Timer idleTimer(30000, getAttention);
+Timer idleTimer(45000, getAttention);
 void getAttention() {
   // say something, do stuff
-  emic.say("Play with me!");
+  emic.say("Play with me.");
   theaterChase(strip.Color(10, 10, 10), 20); // White
   theaterChase(strip.Color(20, 0, 0), 20); //red
   rainbowCycle(0);
@@ -147,7 +147,7 @@ int shakeDetect(){
   sensors_event_t event;
   int i;
   int s = 0;
-  float val = 1.0;
+  float val = 0.5;
   for (i =0; i < 8; i++ ){
     gyro.getEvent(&event);
     if (!(fabs(event.gyro.x) > val || fabs(event.gyro.y) >  val || fabs(event.gyro.z) > val)){
@@ -180,22 +180,22 @@ int idleDetect(){
 
 int magCheck(){
   sensors_event_t event;
-  float val = -150.0;
-  for (int i = 0; i < 6; i++) {
-	mag.getEvent(&event);
-	if (event.magnetic.y > val){
-    scoreUp = true;
-    emic.say("I feel better!");
-    for (int i=0 ; i < 4 ; i++){
-      colorWipe(strip.Color(  0,  20, 0), 0);  // Blue
-      delay(100);
-      colorWipe(strip.Color(  0,   0, 0), 0);
-      delay(100);
-    }
-    setSolidLeds();
-		return 1;
-	}
-	delay(100);
+  float val = -300.0;
+  for (int n = 0; n < 6; n++) {
+	   mag.getEvent(&event);
+  	if (event.magnetic.y > val){
+      scoreUp = true;
+      emic.say("I feel better!");
+      for (int j=0 ; j < 4 ; j++){
+        colorWipe(strip.Color(  0,  20, 0), 0);  // Blue
+        delay(100);
+        colorWipe(strip.Color(  0,   0, 0), 0);
+        delay(100);
+      }
+      setSolidLeds();
+  		return 1;
+  	}
+  	delay(100);
   }
   emic.say("So tired");
   for (int i=0 ; i < 4 ; i++){
@@ -316,15 +316,15 @@ void colorChase(uint32_t c, uint8_t wait) {
 void theaterChase(uint32_t c, uint8_t wait) {
   for (int j=0; j<4; j++) {  //do 4 cycles of chasing
     for (int q=0; q < 3; q++) {
-      for (int i=0; i < strip.numPixels(); i=i+3) {
-        strip.setPixelColor(i+q, c);    //turn every third pixel on
+      for (int z=0; z < strip.numPixels(); z=z+3) {
+        strip.setPixelColor(z+q, c);    //turn every third pixel on
       }
       strip.show();
 
       delay(wait);
 
-      for (int i=0; i < strip.numPixels(); i=i+3) {
-        strip.setPixelColor(i+q, 0);        //turn every third pixel off
+      for (int z=0; z < strip.numPixels(); z=z+3) {
+        strip.setPixelColor(z+q, 0);        //turn every third pixel off
       }
     }
   }

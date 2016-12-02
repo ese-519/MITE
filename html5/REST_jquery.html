@@ -5,10 +5,10 @@
 </head>
 <body>
 
-<button id="ledOn">LED On</button>
-<button id="ledOff">LED Off</button>
-<button id="checkButton">Button POST</button>
-<button id="readButton">Button GET</button>
+<button id="ledOn">Mag Check</button>
+<button id="ledOff">Punch</button>
+<button id="checkButton">Shake</button>
+<button id="readButton">Photo Check</button>
 <button id="connectButton">Connect to Photon</button>
 
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -16,7 +16,7 @@
 <script>
 var POSTurl = "https://api.particle.io/v1/devices/2e0025000347333437333039/";
 var thisIP = "10.0.0.109";
-var apiURL = "http://" + thisIP + ":8081/";
+var apiURL = "http://" + thisIP + ":8082/";
 
 function connect(ipAddress) {
 	$.ajax({
@@ -42,7 +42,7 @@ $("#ledOn").on('click', function () {
         		type: "POST",
         		url: apiURL + "photon",
         		data: {
-          		func: "photoCheck",
+          		func: "magCheck",
         		},
 				timeout: 7000,
 				success: function(data) {
@@ -76,7 +76,7 @@ $("#checkButton").on('click', function () {
         		type: "POST",
         		url: apiURL + "photon",
         		data: {
-          		func: "servoUp",
+          		func: "shake",
         		},
 				timeout: 7000,
 				success: function(data) {
@@ -93,7 +93,7 @@ $("#readButton").on('click', function () {
         		type: "POST",
         		url: apiURL + "photon",
         		data: {
-          		func: "magCheck",
+          		func: "photoCheck",
         		},
 				timeout: 7000,
 				success: function(data) {

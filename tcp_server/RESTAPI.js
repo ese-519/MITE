@@ -6,7 +6,7 @@ app.use(cors());
 var os = require('os');
 var net = require('net');
 
-var PORT = 9000; // Port for Photon's TCP server
+var PORT = 9001; // Port for Photon's TCP server
 
 //-------------bascially find and save the IP address of the laptop. instead of having me run ifconfig
 var ip = null;
@@ -95,7 +95,7 @@ app.post('/photon', function(req, res) {
 	}	
 });
 
-var server = app.listen(8081, function () {
+var server = app.listen(8082, function () {
    var host = server.address().address
    var port = server.address().port
 

@@ -31,7 +31,7 @@
 var actionB = document.getElementById('connect');			// Action button for testing shake input
 var vid = videojs('vidjs');								// Video player object
 var thisIP = "10.0.0.109";
-var apiURL = "http://" + thisIP + ":8081/";
+var apiURL = "http://" + thisIP + ":8082/";
 
 // Video objects start here - declare in reverse order so parents can reference their children
 var VIDBA = {
@@ -66,7 +66,7 @@ var VIDB = {
 	end: false,
 	events: [[true, 23.2, "vibrate"], [true, 24.2, "servoUp"], [true, 46, "vibrateLongRed"], [true, 47, "vibrateLongRed"], [true, 48, "vibrateLongRed"], 
 	[true, 49, "vibrateLongRed"], [true, 50, "vibrateLongRed"], [true, 51, "vibrateLongRed"], [true, 52, "vibrateLongRed"], [true, 53, "vibrateLongRed"], [true, 54, "vibrateLongRed"], [true, 55, "vibrateLongRed"], [true, 56, "vibrateLongRed"], [true, 57, "vibrateLongRed"], 
-	[true, 58, "vibrateLongRed"], [true, 59, "vibrateLongRed"], [true, 60, "vibrateLongRed"], [true, 61, "vibrateLongRed"], [true, 62, "vibrateLongRed"], [true, 63, "vibrateLongRed"], [true, 64, "vibrateLongRed"]],
+	[true, 58, "vibrateLongRed"], [true, 59, "vibrateLongRed"], [true, 60, "vibrateLongRed"]],
 	check: [true, 42, "photoCheck", "", 0, "Shield Goku's face!"],
 	childA: VIDBA,
 	childB: VIDAB
@@ -219,7 +219,7 @@ function actuate(cmd) {
 function connect(ipAddress) {
 	$.ajax({
         type: "POST",
-		url: "https://api.particle.io/v1/devices/29001e000447343339373536/connect",
+		url: "https://api.particle.io/v1/devices/2e0025000347333437333039/connect",
 		data: {
 			access_token: "371d886ca00a3722f39956df7b35b7c6c292d6d3",
 			ip: ipAddress
