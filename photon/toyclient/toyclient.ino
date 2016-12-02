@@ -53,7 +53,7 @@ int connectToMyServer(String ip) {  //Function to connect to TCP Server
 
 
 //----------------Function stubs
-Timer idleTimer(15000, getAttention);
+Timer idleTimer(30000, getAttention);
 void getAttention() {
   // say something, do stuff
   emic.say("Play with me!");
@@ -62,7 +62,7 @@ void getAttention() {
   rainbowCycle(0);
   setSolidLeds();
 }
-Timer idleWatchDog(1000, idleCheckQuick);
+Timer idleWatchDog(5000, idleCheckQuick);
 void idleCheckQuick(){
   sensors_event_t event;
   float val = 0.08;
@@ -428,6 +428,8 @@ void setup() {
 void loop() {
   if (client.connected()) {
     if (client.available()) {
+      idleTimer.reset();
+      idleWatchDog.reset();
       char cmd = client.read();
       if ('a' == cmd) {
         client.write(LedOn());
@@ -469,15 +471,15 @@ void loop() {
     scoreUp = false;
     if (score == 1) {
       //level 1
-      emic.say("1");
+      emic.say("Level 1");
       setSolidLeds();
     } else if (score == 2) {
       //level 2
-      emic.say("2");
+      emic.say("Level 2");
       setSolidLeds();
     } else if (score > 2) {
       //level 3 - do crazy stuff here
-      emic.say("3");
+      emic.say("Level 3");
       rainbowCycle(1);
       score = 0; // reset to 0
       setSolidLeds();
