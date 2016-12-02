@@ -180,10 +180,10 @@ int idleDetect(){
 
 int magCheck(){
   sensors_event_t event;
-  float val = -100.0;
+  float val = -150.0;
   for (int i = 0; i < 6; i++) {
 	mag.getEvent(&event);
-	if (event.magnetic.y < val || event.magnetic.x < val || event.magnetic.z < val){
+	if (event.magnetic.y > val){
     scoreUp = true;
     emic.say("I feel better!");
     for (int i=0 ; i < 4 ; i++){
