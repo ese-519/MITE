@@ -30,7 +30,7 @@
 
 var actionB = document.getElementById('connect');			// Action button for testing shake input
 var vid = videojs('vidjs');								// Video player object
-var thisIP = "192.168.0.101";
+var thisIP = "10.0.0.109";
 var apiURL = "http://" + thisIP + ":8081/";
 
 // Video objects start here - declare in reverse order so parents can reference their children
@@ -45,9 +45,9 @@ var VIDAB = {
 	src: "vids/Loseshort.mp4",
 	type: "video/mp4",
 	end: true,
-	events: [[true, 0, "servoUp"], [true, 5, "servoDown"], [true, 19.5, "vibrate"], [true, 26.7, "vibrate"], [true, 36, "vibrateLong"], [true, 37, "vibrateLong"], [true, 38, "vibrateLong"], 
-	[true, 39, "vibrateLong"], [true, 40, "vibrateLong"], [true, 41, "vibrateLong"], [true, 42, "vibrateLong"], [true, 43, "vibrateLong"], [true, 44, "vibrateLong"], 
-	[true, 45, "vibrateLong"], [true, 46, "vibrateLong"], [true, 47, "vibrateLong"], [true, 48, "vibrateLong"]],
+	events: [[true, 0, "servoUp"], [true, 5, "servoDown"], [true, 19.5, "vibrate"], [true, 26.7, "vibrate"], [true, 36, "vibrateLongRed"], [true, 37, "vibrateLongRed"], [true, 38, "vibrateLongRed"], 
+	[true, 39, "vibrateLongRed"], [true, 40, "vibrateLongRed"], [true, 41, "vibrateLongRed"], [true, 42, "vibrateLongRed"], [true, 43, "vibrateLongRed"], [true, 44, "vibrateLongRed"], 
+	[true, 45, "vibrateLongRed"], [true, 46, "vibrateLongRed"], [true, 47, "vibrateLongRed"], [true, 48, "vibrateLongRed"]],
 	check: [false, 0]
 };
 var VIDAA = {
@@ -64,9 +64,9 @@ var VIDB = {
 	src: "vids/VegetaShield.mp4",
 	type: "video/mp4",
 	end: false,
-	events: [[true, 23.2, "vibrate"], [true, 24.2, "servoUp"], [true, 46, "vibrateLong"], [true, 47, "vibrateLong"], [true, 48, "vibrateLong"], 
-	[true, 49, "vibrateLong"], [true, 50, "vibrateLong"], [true, 51, "vibrateLong"], [true, 52, "vibrateLong"], [true, 53, "vibrateLong"], [true, 54, "vibrateLong"], [true, 55, "vibrateLong"], [true, 56, "vibrateLong"], [true, 57, "vibrateLong"], 
-	[true, 58, "vibrateLong"], [true, 59, "vibrateLong"], [true, 60, "vibrateLong"], [true, 61, "vibrateLong"], [true, 62, "vibrateLong"], [true, 63, "vibrateLong"], [true, 64, "vibrateLong"]],
+	events: [[true, 23.2, "vibrate"], [true, 24.2, "servoUp"], [true, 46, "vibrateLongRed"], [true, 47, "vibrateLongRed"], [true, 48, "vibrateLongRed"], 
+	[true, 49, "vibrateLongRed"], [true, 50, "vibrateLongRed"], [true, 51, "vibrateLongRed"], [true, 52, "vibrateLongRed"], [true, 53, "vibrateLongRed"], [true, 54, "vibrateLongRed"], [true, 55, "vibrateLongRed"], [true, 56, "vibrateLongRed"], [true, 57, "vibrateLongRed"], 
+	[true, 58, "vibrateLongRed"], [true, 59, "vibrateLongRed"], [true, 60, "vibrateLongRed"], [true, 61, "vibrateLongRed"], [true, 62, "vibrateLongRed"], [true, 63, "vibrateLongRed"], [true, 64, "vibrateLongRed"]],
 	check: [true, 42, "photoCheck", "", 0, "Shield Goku's face!"],
 	childA: VIDBA,
 	childB: VIDAB
@@ -84,7 +84,7 @@ var VIDA = {
 	src: "vids/Powerup.mp4",
 	type: "video/mp4",
 	end: false,
-	events: [[true, 0, "servoMid"], [true, 18, "vibrate"], [true, 22, "vibrate"], [true, 22.5, "vibrate"], [true, 21, "vibrate"], [true, 21.5, "vibrate"], [true, 28, "servoUp"], [true, 29, "servoDown"], [true, 35, "servoUp"], [true, 38, "servoDown"],
+	events: [[true, 0, "servoMid"], [true, 18, "vibrateLongGreen"], [true, 22, "vibrateLongGreen"], [true, 21, "vibrateLongGreen"], [true, 28, "servoUp"], [true, 29, "servoDown"], [true, 35, "servoUp"], [true, 38, "servoDown"],
 	[true, 39, "punch"], [true, 44, "servoUp"], [true, 44.5, "servoDown"]],
 	check: [false, 0],
 	childA: VIDA1,
@@ -93,7 +93,7 @@ var VIDA = {
 var VIDROOT = {
 	src: "vids/Intro.mp4",
 	type: "video/mp4",
-	events: [[true, 9, "punch"], [true, 14, "vibrate"], [true, 20, "vibrate"]], // [execute?, timestamp, function name, function arg]
+	events: [[true, 8, "punch"], [true, 14, "vibrate"], [true, 20, "vibrate"]], // [execute?, timestamp, function name, function arg]
 	check: [true, 40, "shake", "", 0, "Shake Goku to power up!"],	// [execute?, timestamp, function name, arg, result, overlay text]
 	end: false,
 	childA: VIDA,

@@ -77,14 +77,17 @@ app.post('/photon', function(req, res) {
 		case "servoDown":
 			sock.write('j');
 			break;
-		case "vibrateLong":
+		case "vibrateLongRed":
 			sock.write('k');
 			break;
-		case "punch":
+		case "vibrateLongGreen":
 			sock.write('l');
 			break;
-		case "servoMid":
+		case "punch":
 			sock.write('m');
+			break;
+		case "servoMid":
+			sock.write('n');
 			break;
 		default:
 			res.end("Invalid function call");
