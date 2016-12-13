@@ -182,7 +182,7 @@ void setup() {
   pinMode(D1, INPUT_PULLDOWN);  // Fake idle
   pinMode(A0, INPUT); // Photocell
   digitalWrite(D2, LOW);
-
+  Serial.begin(115200);
   idleTimer.start();
 /*  if(!accel.begin())
   {
@@ -220,6 +220,14 @@ void loop() {
       } else if ('k' == cmd){
         client.write(1);
         vibrate(900);
+      } else if('z' == cmd){
+        String sayThis = String("");
+        while (client.available()) {
+          cmd = client.read();
+          sayThis.concat(String(cmd));
+        }
+        Serial.println(sayThis);
+        client.write(1);
       }
 
     }
