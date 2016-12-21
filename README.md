@@ -13,7 +13,7 @@ MITE is an interactive toy, cloud service and video player which forms a closed 
 [![](https://img.youtube.com/vi/sxQR-eVsdVw/0.jpg)](https://www.youtube.com/watch?v=sxQR-eVsdVw)
 
 ### IMAGES and GIFs
-![](images/infinity.png)
+![](images/infinity.PNG)
 ![](images/blockdiagram.png)
 
 ### BUILD INSTRUCTIONS
