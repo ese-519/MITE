@@ -11,8 +11,10 @@ MITE is an interactive toy, cloud service and video player which forms a closed 
 
 ### VIDEO
 [![](https://img.youtube.com/vi/sxQR-eVsdVw/0.jpg)](https://www.youtube.com/watch?v=sxQR-eVsdVw)
+
 ### IMAGES and GIFs
-![](images/Thumb.jpg)
+![](images/infinity.png)
+![](images/blockdiagram.png)
 
 ### BUILD INSTRUCTIONS
 MITE has become an ESE519 lab assignment! Inquire with your nearest ESE519 professor for details!
