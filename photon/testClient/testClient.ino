@@ -32,7 +32,7 @@ int connectToMyServer(String ip) {  //Function to connect to TCP Server
   byte serverAddress[4];
   ipArrayFromString(serverAddress, ip);
 
-  if (client.connect(serverAddress, 9000)) {
+  if (client.connect(serverAddress, 9001)) {
     return 1; // successfully connected
   } else {
     return -1; // failed to connect

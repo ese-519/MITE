@@ -1,0 +1,260 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<link type="text/css" rel="stylesheet" href="video-js.css"/>
+	<link href="videojs\videojs-overlay\dist\videojs-overlay.css" rel="stylesheet">
+	<style>
+		div.overlay {
+			font-size: 500%;
+		}
+	</style>
+</head>
+<body>
+<center>
+<br>
+<video
+	id="vidjs"
+	class="video-js vjs-default-skin"
+	controls
+	width="640" height="360"
+	data-setup='{"sources": [{ "type": "video/mp4", "src": "vids/Intro.mp4", "fluid": true}] }'
+	>
+</video>
+<br>
+<button id="connect" style="height:20px;width:150px;font-size:10px">Connect to photon</button>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="videojs\video.js\dist\video.js"></script>
+<script src="videojs\videojs-overlay\dist\videojs-overlay.js"></script>
+<script>
+/* Set up your environment variables here*/
+var thisIP = "xxx";		// IP of computer hosting node.js
+var deviceID = "xxx"; 		// Photon device ID
+var accessToken = "xxx";	// Photon access token
+/* End environment variables */
+
+var apiURL = "http://" + thisIP + ":8082/";
+var actionB = document.getElementById('connect');			// Action button 
+var vid = videojs('vidjs');									// Video player object
+// Video objects start here
+var VIDBA = {
+	src: "vids/Shielded.mp4",
+	type: "video/mp4",
+	end: true,
+	events: [[true, 13, "servoDown"]],
+	check: [false, 0]
+};
+var VIDAB = {
+	src: "vids/Loseshort.mp4",
+	type: "video/mp4",
+	end: true,
+	events: [[true, 0, "servoUp"], [true, 5, "servoDown"], [true, 19.5, "vibrate"], [true, 26.7, "vibrate"], [true, 36, "vibrateLongRed"], 
+	[true, 37, "vibrateLongRed"], [true, 38, "vibrateLongRed"], [true, 39, "vibrateLongRed"], [true, 40, "vibrateLongRed"], 
+	[true, 41, "vibrateLongRed"], [true, 42, "vibrateLongRed"], [true, 43, "vibrateLongRed"], [true, 44, "vibrateLongRed"], 
+	[true, 45, "vibrateLongRed"], [true, 46, "vibrateLongRed"], [true, 47, "vibrateLongRed"], [true, 48, "vibrateLongRed"]],
+	check: [false, 0]
+};
+var VIDAA = {
+	src: "vids/Win.mp4",
+	type: "video/mp4",
+	end: true,
+	events: [[true, 0, "vibrate"], [true, 1, "vibrate"], [true, 2, "vibrate"], [true, 3, "vibrate"], [true, 4, "vibrate"], 
+	[true, 5, "vibrate"], [true, 6, "vibrate"], [true, 7, "vibrate"], [true, 8, "vibrate"], [true, 9, "vibrate"], [true, 10, "vibrate"], 
+	[true, 11, "vibrate"], [true, 12, "vibrate"], [true, 13, "vibrate"], [true, 14, "vibrate"], [true, 15, "vibrate"], 
+	[true, 16, "vibrate"], [true, 17, "vibrate"], [true, 18, "vibrate"], [true, 19, "vibrate"], [true, 20, "vibrate"], [true, 21, "vibrate"], 
+	[true, 22, "vibrate"], [true, 23, "vibrate"], [true, 24, "vibrate"], 
+	[true, 25, "vibrate"], [true, 26, "vibrate"], [true, 27, "vibrate"], [true, 28, "servoUp"], [true, 53, "servoDown"]],
+	check: [false, 0]
+};
+var VIDB = {
+	src: "vids/VegetaShield.mp4",
+	type: "video/mp4",
+	end: false,
+	events: [[true, 23.2, "vibrate"], [true, 24.2, "servoUp"], [true, 46, "vibrateLongRed"], [true, 47, "vibrateLongRed"], 
+	[true, 48, "vibrateLongRed"], [true, 49, "vibrateLongRed"], [true, 50, "vibrateLongRed"], [true, 51, "vibrateLongRed"], 
+	[true, 52, "vibrateLongRed"], [true, 53, "vibrateLongRed"], [true, 54, "vibrateLongRed"], [true, 55, "vibrateLongRed"], 
+	[true, 56, "vibrateLongRed"], [true, 57, "vibrateLongRed"], true, 58, "vibrateLongRed"], [true, 59, "vibrateLongRed"], 
+	[true, 60, "vibrateLongRed"]],
+	check: [true, 42, "photoCheck", "", 0, "Shield Goku's face!"],
+	childA: VIDBA,
+	childB: VIDAB
+};
+var VIDA1 = {
+	src: "vids/Tired.mp4",
+	type: "video/mp4",
+	end: false,
+	events: [[true, 24.5, "vibrate"]],
+	check: [true, 40, "magCheck", "", 0, "Regenerate strength with Goku's vest!"],
+	childA: VIDAA,
+	childB: VIDAB
+};
+var VIDA = {
+	src: "vids/Powerup.mp4",
+	type: "video/mp4",
+	end: false,
+	events: [[true, 0, "servoMid"], [true, 18, "vibrateLongGreen"], [true, 22, "vibrateLongGreen"], [true, 21, "vibrateLongGreen"], 
+	[true, 28, "servoUp"], [true, 29, "servoDown"], [true, 35, "servoUp"], [true, 38, "servoDown"],
+	[true, 39, "punch"], [true, 44, "servoUp"], [true, 44.5, "servoDown"]],
+	check: [false, 0],
+	childA: VIDA1,
+	childB: VIDA1
+};
+var VIDROOT = {
+	src: "vids/Intro.mp4",
+	type: "video/mp4",
+	// Finish building the metadata for this video!
+	//
+	//
+	//
+};
+// Video objects end here
+
+var thisVid = VIDROOT;
+
+vid.on('timeupdate', function() {
+	// Loop through available events in the current video object
+	
+		// Check if this event needs to be executed
+		
+		// Do the event and make sure it isn't repeated forever
+		
+		
+	// Check if a sensing event needs to happen
+	
+	// Do the event and make sure it isn't repeated forever
+	
+	
+});
+
+vid.on('ended', function() {
+	if (!thisVid.end) {		// Not the last video in the tree
+		if (thisVid.check[4] == 1) {	// A positive input was received from the sensor
+			console.log("Positive input received");
+			thisVid = thisVid.childA;	// Change the current video to the "good" outcome video
+			changeSource({type: thisVid.type, src: thisVid.src});
+		}
+		else {
+			console.log("Negative/no input received");
+			thisVid = thisVid.childB;	// Else, change to the "bad" video
+			changeSource({type: thisVid.type, src: thisVid.src});
+		}
+		if (thisVid.check[0]) {			// Check if this new video has a sensing event in it
+			vid.overlay({				// Change the overlay to handle the sensing event
+				class: 'overlay',
+				showBackground: false,
+				overlays: [{
+					content: thisVid.check[5],	// Overlay text
+					start: thisVid.check[1] - 5,	// Start displaying 5 seconds before sensing
+					end: thisVid.check[1] + 3,		// Stop displaying 3 seconds after starting to sense
+					align: 'top-left'
+				}]
+			});
+		}
+		else {				// Else, clear the overlay
+			vid.overlay({
+				class: 'overlay',
+				showBackground: false,
+				overlays: [{
+					content: "",
+					start: 'play',
+					end: 'stop'
+				}]
+			});
+		}
+	}
+	
+	else {		// No more videos to play
+	console.log("end of tree");}
+});
+
+function sense (funcName) {
+	$.ajax({
+        type: "POST",
+			url: apiURL + "photon",
+			data: {
+				func: funcName,
+			},
+			timeout: 7000,
+			success: function(data) {
+				console.log(funcName + " response: " + data);	
+				if (data == 1) {
+					thisVid.check[4] = 1;
+				}
+				else {
+					thisVid.check[4] = 0;
+				}
+			},
+			error: function() {
+				console.log(funcName + " timed out");
+				return false;
+			}
+		});
+}
+
+function actuate(cmd) {
+	$.ajax({
+        type: "POST",
+		url: apiURL + "photon",
+		data: {
+			func: cmd
+		},
+		timeout: 7000,
+		success: function(data) {
+			console.log(cmd + ":" + data);	
+		},
+		error: function() {
+			console.log(cmd + " timed out");
+			return false;
+		}
+	});
+}
+
+vid.overlay({
+	class: 'overlay',
+	showBackground: false,
+	overlays: [{
+		content: thisVid.check[5],
+		start: thisVid.check[1] - 5,
+		end: thisVid.check[1] + 3,
+		align: 'top-left'
+	}]
+});
+
+vid.ready(function () {
+	vid.src({type: thisVid.type, src: thisVid.src});	
+});
+
+function connect(ipAddress) {
+	$.ajax({
+        type: "POST",
+		url: "https://api.particle.io/v1/devices/" + deviceID + "/connect",
+		data: {
+			access_token: accessToken,
+			ip: ipAddress
+		},
+		timeout: 7000,
+		success: function(data) {
+			console.log("Connected to photon!");	
+			console.log(data);
+			actionB.style.visibility='hidden';
+		},
+		error: function() {
+			console.log("Could not connect to photon!");
+			return false;
+		}
+	});
+}
+
+function changeSource(sources) {
+		vid.src(sources);
+		vid.play();
+	}
+	
+$("#connect").on('click', function () {
+	connect(thisIP);
+});	
+	
+</script> 
+</center>
+</body>
+</html>
